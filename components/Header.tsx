@@ -66,24 +66,30 @@ export function Header() {
         </div>
       </nav>
       {mobileOpen && (
-        <div className="fixed inset-0 z-50 bg-night/96 p-5 text-cream lg:hidden">
+        <div className="fixed inset-0 z-[60] bg-night/95 p-5 text-cream lg:hidden backdrop-blur-xl">
           <div className="flex items-center justify-between">
             <span className="font-serif text-2xl">Spurge Africa</span>
-            <button aria-label="Close menu" onClick={() => setMobileOpen(false)} className="grid h-10 w-10 place-items-center rounded-full border border-white/15">
+            <button
+              aria-label="Close menu"
+              onClick={() => setMobileOpen(false)}
+              className="grid h-10 w-10 place-items-center rounded-full border border-white/15 bg-white/10 text-cream transition hover:border-gold hover:bg-gold/20 hover:text-gold"
+            >
               <X size={20} />
             </button>
           </div>
-          <div className="mt-12 grid gap-6">
-            {navLinks.map(([label, href]) => (
-              <Link
-                key={href}
-                href={href}
-                className="border-b border-white/10 pb-4 font-serif text-3xl"
-                onClick={() => setMobileOpen(false)}
-              >
-                {label}
-              </Link>
-            ))}
+          <div className="mt-12 rounded-3xl bg-night/90 p-6">
+            <div className="grid gap-6">
+              {navLinks.map(([label, href]) => (
+                <Link
+                  key={href}
+                  href={href}
+                  className="block border-b border-white/10 pb-4 font-serif text-3xl"
+                  onClick={() => setMobileOpen(false)}
+                >
+                  {label}
+                </Link>
+              ))}
+            </div>
           </div>
         </div>
       )}

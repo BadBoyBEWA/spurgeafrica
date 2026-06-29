@@ -51,6 +51,18 @@ textarea {
   font: inherit;
 }
 
+select {
+  color: var(--fg);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--line);
+  appearance: none;
+}
+
+select option {
+  color: var(--fg);
+  background: var(--bg);
+}
+
 button:focus-visible,
 a:focus-visible,
 input:focus-visible,

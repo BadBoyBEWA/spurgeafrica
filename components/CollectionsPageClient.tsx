@@ -60,9 +60,13 @@ export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery }: 
             <p className="font-display text-xs uppercase tracking-[.28em] text-gold">Shop</p>
             <h1 className="mt-3 font-serif text-5xl">Collections</h1>
           </div>
-          <label className="flex items-center gap-3 border hairline px-4 py-3">
+          <label className="flex items-center gap-3 border border-[var(--line)] bg-[var(--panel)] px-4 py-3 rounded-2xl text-[var(--fg)]">
             Sort
-            <select value={sort} onChange={event => setSort(event.target.value)} className="bg-transparent outline-none">
+            <select
+              value={sort}
+              onChange={event => setSort(event.target.value)}
+              className="border border-[var(--line)] bg-[var(--panel)] px-3 py-3 text-[var(--fg)] outline-none rounded-xl appearance-none transition focus:border-gold"
+            >
               {["Newest", "Popular", "Price Low-High", "Price High-Low"].map(option => (
                 <option key={option}>{option}</option>
               ))}
@@ -70,7 +74,7 @@ export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery }: 
           </label>
         </div>
         <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
-          <aside className="glass h-fit p-5">
+          <aside className="glass h-fit rounded-3xl p-5">
             <h2 className="flex items-center gap-2 font-display text-xs uppercase tracking-[.24em] text-gold">
               <SlidersHorizontal size={16} /> Filters
             </h2>
@@ -81,7 +85,7 @@ export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery }: 
                   <select
                     value={selected[key]}
                     onChange={event => setSelected(current => ({ ...current, [key]: event.target.value }))}
-                    className="border border-[var(--line)] bg-[var(--panel)] px-3 py-3 text-[var(--fg)] outline-none transition focus:border-gold"
+                    className="border border-[var(--line)] bg-[var(--panel)] px-3 py-3 text-[var(--fg)] outline-none rounded-xl transition focus:border-gold"
                   >
                     {options.map(option => (
                       <option key={option}>{option}</option>
