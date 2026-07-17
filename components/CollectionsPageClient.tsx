@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
-import { products } from "@/lib/data";
+import type { Product } from "@/lib/data";
 
 const filters = {
   category: ["All", "Agbada", "Senator", "Kaftan", "Casual"],
@@ -16,9 +16,10 @@ const filters = {
 type CollectionsPageClientProps = {
   categoryFromQuery: string;
   occasionFromQuery: string;
+  products: Product[];
 };
 
-export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery }: CollectionsPageClientProps) {
+export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery, products }: CollectionsPageClientProps) {
   const [selected, setSelected] = useState<Record<string, string>>({
     category: categoryFromQuery,
     price: "All",

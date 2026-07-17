@@ -2,13 +2,15 @@ import { notFound } from "next/navigation";
 import { ChevronDown } from "lucide-react";
 import { ProductActions } from "@/components/ProductActions";
 import { ProductCard } from "@/components/ProductCard";
-import { formatPrice, products } from "@/lib/data";
+import { formatPrice } from "@/lib/data";
+import { getProductBySlug, getProducts } from "@/lib/product-queries";
 
 export default async function ProductDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const product = products.find(entry => entry.id === id);
+  const product = await getProductBySlug(id);
   if (!product) notFound();
 
+  const products = await getProducts();
   const related = products.filter(entry => entry.category === product.category && entry.id !== product.id).slice(0, 3);
 
   return (

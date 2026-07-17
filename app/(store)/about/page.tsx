@@ -1,8 +1,9 @@
 import Link from "next/link";
 import { Award, Eye, Flag, Scissors } from "lucide-react";
-import { products } from "@/lib/data";
+import { getProducts } from "@/lib/product-queries";
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const products = await getProducts();
   return (
     <main className="px-4 pb-20 pt-32 sm:px-6 lg:px-8">
       <section className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.9fr_1.1fr]">

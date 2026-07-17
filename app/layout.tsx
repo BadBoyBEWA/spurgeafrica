@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
-import { Header } from "@/components/Header";
-import { CartDrawer } from "@/components/CartDrawer";
-import { Footer } from "@/components/Footer";
 import { Toast } from "@/components/Toast";
 
 export const metadata: Metadata = {
@@ -22,10 +19,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       </head>
       <body>
         <Providers>
-          <Header />
-          <CartDrawer />
           {children}
-          <Footer />
           <Toast />
         </Providers>
       </body>

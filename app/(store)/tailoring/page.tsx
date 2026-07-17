@@ -13,6 +13,8 @@ const measurementFields = [
 export default function TailoringPage() {
   const [step, setStep] = useState(1);
   const [submitted, setSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState("");
   const [form, setForm] = useState<Record<string, string>>({
     outfit: "",
     fabric: "",
@@ -158,12 +160,41 @@ export default function TailoringPage() {
             </Step>
           )}
 
+          {error && <p className="mt-4 text-sm text-red-400">{error}</p>}
           <div className="mt-8 flex justify-between gap-3">
             <button disabled={step === 1} onClick={() => setStep(step - 1)} className="border hairline px-5 py-3 disabled:opacity-35">Back</button>
             {step < 6 ? (
               <button disabled={!canContinue} onClick={() => setStep(step + 1)} className="bg-gold px-6 py-3 font-semibold text-night disabled:opacity-40">Continue</button>
             ) : (
-              <button disabled={!canContinue} onClick={() => setSubmitted(true)} className="bg-gold px-6 py-3 font-semibold text-night disabled:opacity-40">Submit Order</button>
+              <button disabled={!canContinue || isSubmitting} onClick={async () => {
+                setError("");
+                setIsSubmitting(true);
+                try {
+                  const response = await fetch("/api/tailoring", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                      name: form.name || "",
+                      email: form.email || "",
+                      phone: form.phone || "",
+                      styleReference: form.outfit || "",
+                      measurements: Object.fromEntries(measurementFields.filter(field => form[field]).map(field => [field, form[field]])),
+                      budget: form.payment || "",
+                      occasion: form.occasion || "",
+                      notes: form.notes || ""
+                    })
+                  });
+                  const data = await response.json();
+                  if (!response.ok) {
+                    throw new Error(data.error ?? "Unable to submit tailoring request.");
+                  }
+                  setSubmitted(true);
+                } catch (err) {
+                  setError(err instanceof Error ? err.message : "Something went wrong.");
+                } finally {
+                  setIsSubmitting(false);
+                }
+              }} className="bg-gold px-6 py-3 font-semibold text-night disabled:opacity-40">{isSubmitting ? "Submitting..." : "Submit Order"}</button>
             )}
           </div>
         </section>

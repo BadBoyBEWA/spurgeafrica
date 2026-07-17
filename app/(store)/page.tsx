@@ -9,11 +9,12 @@ import {
   craftHighlights,
   heroImage,
   processSteps,
-  products,
   testimonials
 } from "@/lib/data";
+import { getProducts } from "@/lib/product-queries";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const products = await getProducts();
   return (
     <main>
       <section className="relative min-h-screen overflow-hidden">
