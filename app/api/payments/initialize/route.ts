@@ -24,6 +24,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Paystack secret key not configured." }, { status: 500 });
     }
 
+    const origin = request.headers.get("origin") || process.env.NEXT_PUBLIC_APP_URL || process.env.NEXTAUTH_URL || "http://localhost:3000";
     const response = await fetch("https://api.paystack.co/transaction/initialize", {
       method: "POST",
       headers: {
@@ -34,7 +35,11 @@ export async function POST(request: Request) {
         email: parsed.data.email,
         amount: Math.round(parsed.data.amount * 100), // Paystack expects kobo
         reference: `SPG-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
-        callback_url: `${process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"}/checkout/success`,
+        callback_url: `${origin}/checkout/success`,
+        metadata: {
+          orderId: parsed.data.orderId,
+          ...(parsed.data.metadata || {}),
+        },
       }),
     });
 

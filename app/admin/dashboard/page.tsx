@@ -3,6 +3,15 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatPrice } from "@/lib/data";
+import {
+  ArrowUpRight,
+  Mail,
+  MessageSquare,
+  Scissors,
+  ShoppingBag,
+  Users,
+  WalletCards,
+} from "lucide-react";
 
 export default async function AdminDashboard() {
   const session = await getServerSession(authOptions);
@@ -36,71 +45,143 @@ export default async function AdminDashboard() {
   const totalRevenue = totalRevenueData._sum.amount || 0;
 
   const stats = [
-    { label: "Total Revenue", value: formatPrice(totalRevenue) },
-    { label: "Total Orders", value: totalOrders.toString() },
-    { label: "Subscribers", value: subscribers.toString() },
-    { label: "Pending Tailoring", value: pendingTailoring.toString() },
-    { label: "Unread Messages", value: unreadMessages.toString() },
+    { label: "Total Revenue", value: formatPrice(totalRevenue), icon: WalletCards, href: "/admin/orders" },
+    { label: "Total Orders", value: totalOrders.toString(), icon: ShoppingBag, href: "/admin/orders" },
+    { label: "Subscribers", value: subscribers.toString(), icon: Users, href: "/admin/subscribers" },
+    { label: "Pending Tailoring", value: pendingTailoring.toString(), icon: Scissors, href: "/admin/tailoring" },
+    { label: "Unread Messages", value: unreadMessages.toString(), icon: Mail, href: "/admin/messages" },
+  ];
+
+  const quickActions = [
+    { label: "View orders", href: "/admin/orders" },
+    { label: "Add product", href: "/admin/products/new" },
+    { label: "Tailoring enquiries", href: "/admin/tailoring" },
+    { label: "Customer messages", href: "/admin/messages" },
   ];
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold mb-6 text-gray-900">Dashboard</h1>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {stats.map((stat) => (
-          <div key={stat.label} className="bg-white p-6 rounded-lg shadow-sm border border-gray-100">
-            <p className="text-sm font-medium text-gray-500">{stat.label}</p>
-            <p className="mt-2 text-3xl font-semibold text-gray-900">{stat.value}</p>
-          </div>
-        ))}
+    <div className="space-y-8">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-gold/80">
+            Admin overview
+          </p>
+          <h1 className="mt-2 font-display text-3xl font-bold text-cream">Dashboard</h1>
+          <p className="mt-2 max-w-2xl text-sm leading-6 text-zinc-400">
+            Track store activity, follow up with customers, and jump into the operational queues that need attention.
+          </p>
+        </div>
+        <Link
+          href="/admin/products/new"
+          className="inline-flex w-fit items-center rounded-md bg-gold px-4 py-2 text-sm font-semibold text-night transition hover:bg-[#e1b968]"
+        >
+          Add product
+          <ArrowUpRight className="ml-2 h-4 w-4" />
+        </Link>
       </div>
 
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
-        <div className="px-6 py-4 border-b border-gray-100 flex justify-between items-center">
-          <h2 className="text-lg font-medium text-gray-900">Recent Orders</h2>
-          <Link href="/admin/orders" className="text-sm text-blue-600 hover:text-blue-800">
-            View all
-          </Link>
-        </div>
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50">
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order ID</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-              </tr>
-            </thead>
-            <tbody className="bg-white divide-y divide-gray-200">
-              {recentOrders.map((order) => (
-                <tr key={order.id} className="hover:bg-gray-50">
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-blue-600">
-                    <Link href={`/admin/orders/${order.id}`}>{order.id}</Link>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{order.customerName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                    {new Date(order.createdAt).toLocaleDateString()}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${order.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
-                        order.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
-                        'bg-gray-100 text-gray-800'}`}>
-                      {order.status}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-              {recentOrders.length === 0 && (
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-5">
+        {stats.map((stat) => {
+          const Icon = stat.icon;
+          return (
+            <Link
+              key={stat.label}
+              href={stat.href}
+              className="rounded-lg border border-white/10 bg-zinc-950/70 p-5 shadow-sm transition hover:border-gold/40 hover:bg-zinc-900"
+            >
+              <div className="flex items-center justify-between gap-3">
+                <span className="rounded-md border border-white/10 bg-white/[0.04] p-2 text-gold">
+                  <Icon className="h-5 w-5" />
+                </span>
+                <ArrowUpRight className="h-4 w-4 text-zinc-600" />
+              </div>
+              <p className="mt-5 text-sm font-medium text-zinc-400">{stat.label}</p>
+              <p className="mt-2 text-2xl font-semibold text-cream">{stat.value}</p>
+            </Link>
+          );
+        })}
+      </div>
+
+      <div className="grid grid-cols-1 gap-6 xl:grid-cols-[1fr_320px]">
+        <div className="overflow-hidden rounded-lg border border-white/10 bg-zinc-950/70 shadow-sm">
+          <div className="flex flex-col gap-3 border-b border-white/10 px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div>
+              <h2 className="text-lg font-semibold text-cream">Recent Orders</h2>
+              <p className="mt-1 text-sm text-zinc-500">Latest customer purchases and their current status.</p>
+            </div>
+            <Link href="/admin/orders" className="inline-flex items-center text-sm font-medium text-gold hover:text-[#e1b968]">
+              View all
+              <ArrowUpRight className="ml-1 h-4 w-4" />
+            </Link>
+          </div>
+          <div className="overflow-x-auto">
+            <table className="min-w-full divide-y divide-zinc-800">
+              <thead className="bg-zinc-950">
                 <tr>
-                  <td colSpan={4} className="px-6 py-4 text-center text-sm text-gray-500">No orders yet.</td>
+                  <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Order ID</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Customer</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Date</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Status</th>
                 </tr>
-              )}
-            </tbody>
-          </table>
+              </thead>
+              <tbody className="divide-y divide-zinc-800">
+                {recentOrders.map((order) => (
+                  <tr key={order.id} className="transition hover:bg-zinc-900/70">
+                    <td className="whitespace-nowrap px-5 py-4 text-sm font-medium text-gold">
+                      <Link href={`/admin/orders/${order.id}`}>{order.id}</Link>
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-cream">{order.customerName}</td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-zinc-400">
+                      {new Date(order.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm">
+                      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
+                        order.status === "confirmed" ? "bg-green-400/10 text-green-300" :
+                        order.status === "pending" ? "bg-yellow-400/10 text-yellow-300" :
+                        "bg-zinc-800 text-zinc-300"
+                      }`}>
+                        {order.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+                {recentOrders.length === 0 && (
+                  <tr>
+                    <td colSpan={4} className="px-5 py-14 text-center">
+                      <ShoppingBag className="mx-auto h-8 w-8 text-zinc-700" />
+                      <p className="mt-3 text-sm font-medium text-zinc-300">No orders yet</p>
+                      <p className="mt-1 text-sm text-zinc-500">New customer orders will appear here.</p>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
+
+        <aside className="rounded-lg border border-white/10 bg-zinc-950/70 p-5 shadow-sm">
+          <div className="flex items-center gap-3">
+            <span className="rounded-md border border-white/10 bg-white/[0.04] p-2 text-gold">
+              <MessageSquare className="h-5 w-5" />
+            </span>
+            <div>
+              <h2 className="font-semibold text-cream">Quick actions</h2>
+              <p className="text-sm text-zinc-500">Common admin tasks.</p>
+            </div>
+          </div>
+          <div className="mt-5 space-y-2">
+            {quickActions.map((action) => (
+              <Link
+                key={action.href}
+                href={action.href}
+                className="flex items-center justify-between rounded-md border border-white/10 px-3 py-3 text-sm text-zinc-300 transition hover:border-gold/40 hover:bg-white/[0.04] hover:text-gold"
+              >
+                {action.label}
+                <ArrowUpRight className="h-4 w-4" />
+              </Link>
+            ))}
+          </div>
+        </aside>
       </div>
     </div>
   );

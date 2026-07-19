@@ -17,17 +17,17 @@ export default async function HomePage() {
   const products = await getProducts();
   return (
     <main>
-      <section className="relative min-h-screen overflow-hidden">
+      <section className="relative min-h-screen overflow-hidden bg-night">
         <div
           className="absolute inset-0 scale-105 bg-cover bg-center bg-fixed"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-night/60 to-[var(--bg)]" />
+        <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-night/70 to-[var(--bg)]" />
         <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-16 pt-32 sm:px-6 lg:px-8">
           <Reveal className="max-w-3xl">
             <p className="font-display text-xs uppercase tracking-[.32em] text-gold">Ready-to-wear and bespoke tailoring</p>
-            <h1 className="mt-5 font-serif text-6xl leading-[.95] sm:text-7xl lg:text-8xl">Redefine African Luxury</h1>
-            <p className="mt-6 max-w-xl text-base leading-8 text-cream/78">
+            <h1 className="mt-5 font-serif text-6xl leading-[.95] text-cream drop-shadow-[0_4px_22px_rgba(0,0,0,.65)] sm:text-7xl lg:text-8xl">Redefine African Luxury</h1>
+            <p className="mt-6 max-w-xl text-base leading-8 text-cream/85 drop-shadow-[0_2px_14px_rgba(0,0,0,.8)]">
               Editorial silhouettes, heritage fabrics, and precision tailoring for ceremonies, boardrooms, and modern African life.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
@@ -40,14 +40,14 @@ export default async function HomePage() {
             </div>
           </Reveal>
         </div>
-        <div className="absolute bottom-8 left-0 right-0 overflow-hidden border-y border-white/10 py-3">
-          <div className="flex w-[200%] animate-marquee gap-10 font-display text-xs uppercase tracking-[.28em] text-cream/70">
+        <div className="absolute bottom-0 left-0 right-0 overflow-hidden border-y border-white/10 bg-night/80 py-3 backdrop-blur">
+          <div className="flex w-[200%] animate-marquee gap-10 font-display text-xs uppercase tracking-[.28em] text-cream/75">
             {Array.from({ length: 12 }).map((_, index) => <span key={index}>Bespoke Agbada • Luxury Senator Wear • Wedding Tailoring</span>)}
           </div>
         </div>
       </section>
 
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
+      <section className="relative z-10 bg-[var(--bg)] px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
           <SectionHeading kicker="Collections" title="Ceremonial presence, everyday ease" copy="Shop curated silhouettes shaped by Nigerian tailoring culture and a modern luxury lens." />
         </Reveal>

@@ -8,6 +8,10 @@ type ProductFormProps = {
   initialData?: any;
 };
 
+const inputClass =
+  "mt-1 block w-full rounded-md border border-white/10 bg-white/[0.06] px-3 py-2.5 text-cream placeholder:text-zinc-600 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 sm:text-sm";
+const labelClass = "block text-sm font-medium text-zinc-300";
+
 export function ProductForm({ initialData }: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -15,7 +19,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
-    
+
     try {
       const formData = new FormData(event.currentTarget);
       if (initialData) {
@@ -24,6 +28,7 @@ export function ProductForm({ initialData }: ProductFormProps) {
         await createProduct(formData);
       }
       router.push("/admin/products");
+      router.refresh();
     } catch (error) {
       console.error(error);
       alert("Something went wrong");
@@ -34,22 +39,22 @@ export function ProductForm({ initialData }: ProductFormProps) {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
         <div>
-          <label className="block text-sm font-medium text-gray-700">Name</label>
-          <input required type="text" name="name" defaultValue={initialData?.name} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm" />
+          <label className={labelClass}>Name</label>
+          <input required type="text" name="name" defaultValue={initialData?.name} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Price (₦)</label>
-          <input required type="number" name="price" defaultValue={initialData?.price} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm" />
+          <label className={labelClass}>Price (NGN)</label>
+          <input required type="number" name="price" defaultValue={initialData?.price} className={inputClass} />
         </div>
         <div className="md:col-span-2">
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea required name="description" rows={3} defaultValue={initialData?.description} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm" />
+          <label className={labelClass}>Description</label>
+          <textarea required name="description" rows={4} defaultValue={initialData?.description} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Category</label>
-          <select name="category" defaultValue={initialData?.category || "Agbada"} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm">
+          <label className={labelClass}>Category</label>
+          <select name="category" defaultValue={initialData?.category || "Agbada"} className={inputClass}>
             <option>Agbada</option>
             <option>Senator</option>
             <option>Kaftan</option>
@@ -57,8 +62,8 @@ export function ProductForm({ initialData }: ProductFormProps) {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Occasion</label>
-          <select name="occasion" defaultValue={initialData?.occasion || "Wedding"} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm">
+          <label className={labelClass}>Occasion</label>
+          <select name="occasion" defaultValue={initialData?.occasion || "Wedding"} className={inputClass}>
             <option>Wedding</option>
             <option>Corporate</option>
             <option>Casual</option>
@@ -67,30 +72,46 @@ export function ProductForm({ initialData }: ProductFormProps) {
           </select>
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Color</label>
-          <input required type="text" name="color" defaultValue={initialData?.color} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm" />
+          <label className={labelClass}>Color</label>
+          <input required type="text" name="color" defaultValue={initialData?.color} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Fabric</label>
-          <input required type="text" name="fabric" defaultValue={initialData?.fabric} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm" />
+          <label className={labelClass}>Fabric</label>
+          <input required type="text" name="fabric" defaultValue={initialData?.fabric} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Stock</label>
-          <input required type="number" name="stock" defaultValue={initialData?.stock ?? 10} className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 text-gray-900 focus:border-black focus:outline-none focus:ring-1 focus:ring-black sm:text-sm" />
+          <label className={labelClass}>Stock</label>
+          <input required type="number" name="stock" defaultValue={initialData?.stock ?? 10} className={inputClass} />
         </div>
         <div>
-          <label className="block text-sm font-medium text-gray-700">Product Image</label>
-          <input type="file" name="image" accept="image/*" className="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-gray-50 file:text-gray-700 hover:file:bg-gray-100" />
+          <label className={labelClass}>Product Image</label>
+          <input
+            type="file"
+            name="image"
+            accept="image/*"
+            className="mt-1 block w-full rounded-md border border-white/10 bg-white/[0.06] text-sm text-zinc-400 file:mr-4 file:border-0 file:bg-gold file:px-4 file:py-2.5 file:text-sm file:font-semibold file:text-night hover:file:bg-[#e1b968]"
+          />
           {initialData?.image && (
-            <div className="mt-2">
-              <img src={initialData.image} alt="Current" className="h-20 w-20 object-cover rounded" />
+            <div className="mt-3 flex items-center gap-3 rounded-md border border-white/10 bg-white/[0.04] p-3">
+              <img src={initialData.image} alt="Current product" className="h-16 w-16 rounded-md object-cover" />
+              <span className="text-sm text-zinc-400">Current image</span>
             </div>
           )}
         </div>
       </div>
-      <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-        <button type="button" onClick={() => router.back()} className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50">Cancel</button>
-        <button type="submit" disabled={loading} className="px-4 py-2 bg-black border border-transparent rounded-md text-sm font-medium text-white hover:bg-gray-800 disabled:bg-gray-400">
+      <div className="flex flex-col-reverse gap-3 border-t border-white/10 pt-5 sm:flex-row sm:justify-end">
+        <button
+          type="button"
+          onClick={() => router.push("/admin/products")}
+          className="rounded-md border border-white/10 px-4 py-2 text-sm font-medium text-zinc-300 transition hover:border-zinc-700 hover:bg-white/[0.04] hover:text-cream"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={loading}
+          className="rounded-md border border-transparent bg-gold px-4 py-2 text-sm font-semibold text-night transition hover:bg-[#e1b968] disabled:cursor-not-allowed disabled:opacity-60"
+        >
           {loading ? "Saving..." : "Save Product"}
         </button>
       </div>

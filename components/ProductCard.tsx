@@ -8,10 +8,11 @@ import { useCart } from "@/components/Providers";
 
 export function ProductCard({ product }: { product: Product }) {
   const { addItem } = useCart();
+  const productHref = `/products/${product.slug || product.id}`;
 
   return (
     <article className="group relative overflow-hidden border hairline bg-black/10 light:bg-white/45">
-      <Link href={`/products/${product.id}`} className="block">
+      <Link href={productHref} className="block">
         <div className="relative aspect-[4/5] overflow-hidden">
           <img
             src={product.image}
@@ -44,7 +45,7 @@ export function ProductCard({ product }: { product: Product }) {
       </Link>
       <div className="p-4">
         <p className="font-display text-[11px] uppercase tracking-[.22em] text-gold">{product.category}</p>
-        <Link href={`/products/${product.id}`} className="mt-2 block font-serif text-xl hover:text-gold">
+        <Link href={productHref} className="mt-2 block font-serif text-xl hover:text-gold">
           {product.name}
         </Link>
         <p className="mt-2 text-sm text-muted">{formatPrice(product.price)}</p>

@@ -1,7 +1,6 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { CheckCircle2 } from "lucide-react";
 import { formatPrice } from "@/lib/data";
 import { useCart } from "@/components/Providers";
 
@@ -34,8 +33,6 @@ const initialForm: FormState = {
 export default function CheckoutPage() {
   const { items, subtotal, clearCart } = useCart();
   const [form, setForm] = useState<FormState>(initialForm);
-  const [confirmed, setConfirmed] = useState(false);
-  const [orderId, setOrderId] = useState("");
   const [error, setError] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -93,9 +90,12 @@ export default function CheckoutPage() {
         throw new Error(paymentData.error ?? "Unable to initialize payment.");
       }
 
+      if (!paymentData.authorizationUrl) {
+        throw new Error("Payment page was not returned. Please try again.");
+      }
+
       clearCart();
-      setOrderId(orderData.orderId);
-      setConfirmed(true);
+      window.location.assign(paymentData.authorizationUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -106,19 +106,6 @@ export default function CheckoutPage() {
   const isComplete = useMemo(() => {
     return Boolean(form.name && form.email && form.phone && form.address && form.city && form.state && form.country);
   }, [form]);
-
-  if (confirmed) {
-    return (
-      <main className="grid min-h-screen place-items-center px-4 pt-24">
-        <div className="glass max-w-lg p-10 text-center">
-          <CheckCircle2 className="mx-auto text-gold" size={44} />
-          <h1 className="mt-5 font-serif text-5xl">Order Confirmed</h1>
-          <p className="mt-4 text-muted">Your order has been created and payment initialization has been requested.</p>
-          <p className="mt-3 text-sm text-gold">Order number: {orderId}</p>
-        </div>
-      </main>
-    );
-  }
 
   return (
     <main className="px-4 pb-20 pt-32 sm:px-6 lg:px-8">
@@ -154,14 +141,14 @@ export default function CheckoutPage() {
             </div>
             <div>
               <h2 className="font-serif text-2xl">Payment method</h2>
-              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+              <div className="mt-4 grid gap-3">
                 <label className="border hairline p-4"><input type="radio" name="paymentMethod" value="paystack" checked={form.paymentMethod === "paystack"} onChange={handleChange} /> Paystack</label>
-                <label className="border hairline p-4"><input type="radio" name="paymentMethod" value="flutterwave" checked={form.paymentMethod === "flutterwave"} onChange={handleChange} /> Flutterwave</label>
+                <p className="text-sm text-muted">You will be redirected to Paystack to complete payment securely.</p>
               </div>
             </div>
             {error && <p className="text-sm text-red-400">{error}</p>}
             <button disabled={!isComplete || isSubmitting} onClick={handleSubmit} className="bg-gold px-7 py-4 font-display text-xs uppercase tracking-[.22em] text-night disabled:opacity-40">
-              {isSubmitting ? "Processing..." : "Place Order"}
+              {isSubmitting ? "Opening Payment..." : "Proceed to Payment"}
             </button>
           </div>
         </section>

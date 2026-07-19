@@ -10,6 +10,10 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const pathname = usePathname();
 
+  if (pathname === "/admin/login") {
+    return <>{children}</>;
+  }
+
   if (!session) {
     return <>{children}</>;
   }
@@ -65,11 +69,32 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
       </aside>
 
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <div className="md:hidden h-16 bg-zinc-950 border-b border-zinc-800 flex items-center px-4 justify-between">
-           <span className="text-lg font-bold text-gold">Spurge Admin</span>
-           <button onClick={() => signOut({ callbackUrl: "/admin/login" })} className="p-2">
-             <LogOut className="h-5 w-5 text-zinc-400 hover:text-gold" />
-           </button>
+        <div className="md:hidden bg-zinc-950 border-b border-zinc-800">
+          <div className="flex h-16 items-center justify-between px-4">
+            <span className="text-lg font-bold text-gold">Spurge Admin</span>
+            <button onClick={() => signOut({ callbackUrl: "/admin/login" })} className="rounded-md p-2 hover:bg-zinc-900">
+              <LogOut className="h-5 w-5 text-zinc-400 hover:text-gold" />
+            </button>
+          </div>
+          <nav className="flex gap-2 overflow-x-auto px-4 pb-3">
+            {navItems.map((item) => {
+              const isActive = pathname === item.href || pathname.startsWith(`${item.href}/`);
+              return (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`inline-flex shrink-0 items-center rounded-md border px-3 py-2 text-xs font-medium transition-colors ${
+                    isActive
+                      ? "border-gold/40 bg-gold/10 text-gold"
+                      : "border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-gold"
+                  }`}
+                >
+                  <item.icon className="mr-2 h-4 w-4" />
+                  {item.name}
+                </Link>
+              );
+            })}
+          </nav>
         </div>
         <div className="flex-1 overflow-y-auto p-4 md:p-8">
           {children}

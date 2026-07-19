@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { Eye } from "lucide-react";
+import { formatPrice } from "@/lib/data";
 
 export default async function OrdersPage() {
   const session = await getServerSession(authOptions);
@@ -38,7 +39,7 @@ export default async function OrdersPage() {
                   <td className="px-6 py-4 whitespace-nowrap text-white font-medium">{order.id}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-zinc-400">{new Date(order.createdAt).toLocaleDateString()}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-zinc-300">{order.customerName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-gold">₦{total.toLocaleString()}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-gold">{formatPrice(total)}</td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <span className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       order.status === "confirmed" ? "bg-green-100/10 text-green-400" :

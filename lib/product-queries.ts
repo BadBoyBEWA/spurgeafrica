@@ -17,8 +17,14 @@ export async function getProducts(filters?: { category?: string; occasion?: stri
 }
 
 export async function getProductBySlug(slug: string) {
-  const product = await prisma.product.findUnique({
-    where: { slug, isActive: true },
+  const product = await prisma.product.findFirst({
+    where: {
+      isActive: true,
+      OR: [
+        { slug },
+        { id: slug },
+      ],
+    },
   });
 
   if (!product) return null;

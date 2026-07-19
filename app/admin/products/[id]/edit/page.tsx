@@ -3,6 +3,7 @@ import { authOptions } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ProductForm } from "../../ProductForm";
+import { ArrowLeft } from "lucide-react";
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -13,17 +14,22 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
     where: { id },
   });
 
-  if (!product) return <div>Product not found</div>;
+  if (!product) return <div className="text-zinc-400">Product not found</div>;
 
   return (
-    <div>
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">Edit Product</h1>
-        <Link href="/admin/products" className="text-sm text-blue-600 hover:text-blue-800">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.22em] text-gold/80">Catalog</p>
+          <h1 className="mt-2 font-display text-3xl font-bold text-cream">Edit Product</h1>
+          <p className="mt-2 text-sm text-zinc-400">{product.name}</p>
+        </div>
+        <Link href="/admin/products" className="inline-flex items-center text-sm font-medium text-zinc-400 hover:text-gold">
+          <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Products
         </Link>
       </div>
-      <div className="bg-white shadow-sm border border-gray-200 rounded-lg p-6 max-w-3xl">
+      <div className="max-w-3xl rounded-lg border border-white/10 bg-zinc-950/70 p-6 shadow-sm">
         <ProductForm initialData={product} />
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Menu, Moon, ShoppingBag, Sun, X } from "lucide-react";
+import { LockKeyhole, Menu, Moon, ShoppingBag, Sun, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { navLinks } from "@/lib/data";
 import { useCart, useThemeMode } from "@/components/Providers";
@@ -21,8 +21,8 @@ export function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b hairline transition-all duration-300 ${
-        scrolled ? "bg-night/78 py-3 backdrop-blur-xl light:bg-cream/88" : "bg-transparent py-5"
+      className={`fixed inset-x-0 top-0 z-50 border-b hairline bg-[var(--bg)] text-[var(--fg)] shadow-[0_10px_40px_rgba(0,0,0,.16)] backdrop-blur-xl transition-all duration-300 ${
+        scrolled ? "py-3" : "py-4"
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
@@ -31,10 +31,14 @@ export function Header() {
         </Link>
         <div className="hidden items-center gap-7 lg:flex">
           {navLinks.map(([label, href]) => (
-            <Link key={href} href={href} className="font-display text-xs uppercase tracking-[.22em] text-muted transition hover:text-gold">
+            <Link key={href} href={href} className="font-display text-xs uppercase tracking-[.22em] text-[var(--fg)]/80 transition hover:text-gold">
               {label}
             </Link>
           ))}
+          <Link href="/admin/login" className="inline-flex items-center gap-2 rounded-full border hairline px-4 py-2 font-display text-xs uppercase tracking-[.18em] text-[var(--fg)] transition hover:border-gold hover:text-gold">
+            <LockKeyhole size={14} />
+            Admin
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <button
@@ -89,6 +93,14 @@ export function Header() {
                   {label}
                 </Link>
               ))}
+              <Link
+                href="/admin/login"
+                className="flex items-center gap-3 border-b border-white/10 pb-4 font-serif text-3xl text-gold"
+                onClick={() => setMobileOpen(false)}
+              >
+                <LockKeyhole size={24} />
+                Admin Login
+              </Link>
             </div>
           </div>
         </div>
