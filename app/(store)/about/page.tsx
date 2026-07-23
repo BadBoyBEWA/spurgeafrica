@@ -2,6 +2,8 @@ import Link from "next/link";
 import { Award, Eye, Flag, Scissors } from "lucide-react";
 import { getProducts } from "@/lib/product-queries";
 
+export const dynamic = "force-dynamic";
+
 export default async function AboutPage() {
   const products = await getProducts();
   return (
