@@ -32,6 +32,7 @@ export default async function AdminDashboard() {
     prisma.order.findMany({
       take: 5,
       orderBy: { createdAt: "desc" },
+      include: { items: { include: { product: true } } },
     }),
     prisma.payment.aggregate({
       where: { status: "verified" },
@@ -121,6 +122,7 @@ export default async function AdminDashboard() {
                   <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Order ID</th>
                   <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Customer</th>
                   <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Date</th>
+                  <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Items</th>
                   <th className="px-5 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Status</th>
                 </tr>
               </thead>
@@ -133,6 +135,11 @@ export default async function AdminDashboard() {
                     <td className="whitespace-nowrap px-5 py-4 text-sm text-cream">{order.customerName}</td>
                     <td className="whitespace-nowrap px-5 py-4 text-sm text-zinc-400">
                       {new Date(order.createdAt).toLocaleDateString()}
+                    </td>
+                    <td className="whitespace-nowrap px-5 py-4 text-sm text-zinc-400">
+                      <div className="truncate max-w-[150px]" title={(order as any).items?.map((i: any) => `${i.quantity}x ${i.product?.name || i.productName || i.productId}`).join(', ')}>
+                        {(order as any).items?.map((i: any) => `${i.quantity}x ${i.product?.name || i.productName || i.productId}`).join(', ')}
+                      </div>
                     </td>
                     <td className="whitespace-nowrap px-5 py-4 text-sm">
                       <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold ${
@@ -147,7 +154,7 @@ export default async function AdminDashboard() {
                 ))}
                 {recentOrders.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="px-5 py-14 text-center">
+                    <td colSpan={5} className="px-5 py-14 text-center">
                       <ShoppingBag className="mx-auto h-8 w-8 text-zinc-700" />
                       <p className="mt-3 text-sm font-medium text-zinc-300">No orders yet</p>
                       <p className="mt-1 text-sm text-zinc-500">New customer orders will appear here.</p>

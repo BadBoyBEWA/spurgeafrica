@@ -51,22 +51,20 @@ export default async function HomePage() {
         <Reveal>
           <SectionHeading kicker="Collections" title="Ceremonial presence, everyday ease" copy="Shop curated silhouettes shaped by Nigerian tailoring culture and a modern luxury lens." />
         </Reveal>
-        <div className="mx-auto grid max-w-7xl gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+        <div className="mx-auto flex max-w-7xl gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
           {categories.map(category => (
-            <Link key={category.title} href={category.href} className="group overflow-hidden border hairline">
-              <div className="relative min-h-[24rem] overflow-hidden">
+            <Link key={category.title} href={category.href} className="group flex-shrink-0 snap-start flex flex-col items-center gap-4">
+              <div className="relative h-48 w-48 overflow-hidden rounded-full border hairline shadow-soft md:h-64 md:w-64">
                 <Image
                   src={category.image}
                   alt={category.title}
                   fill
-                  sizes="(max-width: 1024px) 50vw, 20vw"
+                  sizes="(max-width: 1024px) 250px, 300px"
                   className="object-cover transition duration-700 group-hover:scale-105"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
-                <div className="absolute bottom-5 left-5 z-10 rounded-full bg-black/60 px-4 py-2 backdrop-blur-sm">
-                  <h3 className="font-serif text-2xl text-cream">{category.title}</h3>
-                </div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
               </div>
+              <h3 className="font-serif text-xl text-[var(--fg)]">{category.title}</h3>
             </Link>
           ))}
         </div>
@@ -105,9 +103,9 @@ export default async function HomePage() {
       <section className="bg-emerald/35 px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_1.2fr]">
           <Reveal>
-            <p className="font-display text-xs uppercase tracking-[.28em] text-gold">Custom tailoring</p>
+            <p className="font-display text-xs uppercase tracking-[.28em] text-[var(--fg)]">Custom tailoring</p>
             <h2 className="mt-3 font-serif text-5xl">Your measurements. Your fabric mood. Our atelier.</h2>
-            <p className="mt-6 leading-8 text-cream/72">
+            <p className="mt-6 leading-8 text-muted">
               Start with a silhouette, upload inspiration, share measurements, and receive a tailored order plan.
             </p>
             <Link href="/tailoring" className="mt-8 inline-block bg-gold px-7 py-4 font-display text-xs uppercase tracking-[.22em] text-night">
@@ -116,9 +114,9 @@ export default async function HomePage() {
           </Reveal>
           <div className="grid gap-4 sm:grid-cols-4">
             {processSteps.map(({ title, icon: Icon }, index) => (
-              <Reveal key={title} className="border border-white/15 p-5">
-                <span className="text-sm text-gold">0{index + 1}</span>
-                <Icon className="mt-8 text-cream" size={25} />
+              <Reveal key={title} className="border hairline p-5">
+                <span className="text-sm font-semibold text-[var(--fg)]">0{index + 1}</span>
+                <Icon className="mt-8 text-[var(--fg)]" size={25} />
                 <h3 className="mt-4 font-serif text-xl">{title}</h3>
               </Reveal>
             ))}

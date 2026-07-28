@@ -12,7 +12,10 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
 
   const order = await prisma.order.findUnique({
     where: { id },
-    include: { items: true, payments: true }
+    include: { 
+      items: { include: { product: true } }, 
+      payments: true 
+    }
   });
 
   if (!order) {
@@ -47,7 +50,7 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
               {order.items.map((item) => (
                 <div key={item.id} className="flex flex-col gap-3 px-6 py-4 sm:flex-row sm:items-center sm:justify-between">
                   <div>
-                    <p className="text-sm font-medium text-cream">{item.productName || item.productId}</p>
+                    <p className="text-sm font-medium text-cream">{(item as any).product?.name || item.productName || item.productId}</p>
                     <p className="mt-1 text-sm text-zinc-500">
                       Qty: {item.quantity}{item.productSize ? ` | Size: ${item.productSize}` : ""}
                     </p>

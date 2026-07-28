@@ -11,13 +11,13 @@ export async function uploadImage(file: File): Promise<string> {
   const buffer = Buffer.from(arrayBuffer);
 
   return new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
+    cloudinary.uploader.upload(
+      `data:${file.type};base64,${buffer.toString('base64')}`,
       { folder: 'spurgeafrica' },
       (error, result) => {
         if (error) reject(error);
         else resolve(result!.secure_url);
       }
     );
-    uploadStream.end(buffer);
   });
 }

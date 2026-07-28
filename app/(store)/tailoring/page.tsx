@@ -39,7 +39,7 @@ export default function TailoringPage() {
       <main className="grid min-h-screen place-items-center px-4 pt-24">
         <div className="glass max-w-xl p-10 text-center">
           <Check className="mx-auto text-gold" size={42} />
-          <h1 className="mt-5 font-serif text-5xl">Order Submitted Successfully</h1>
+          <h1 className="mt-5 font-serif text-5xl text-[var(--fg)]">Order Submitted Successfully</h1>
           <p className="mt-4 text-muted">A Spurge Africa style consultant will review your details and contact you with the next step.</p>
         </div>
       </main>
@@ -50,13 +50,13 @@ export default function TailoringPage() {
     <main className="px-4 pb-20 pt-32 sm:px-6 lg:px-8">
       <div className="mx-auto max-w-6xl">
         <p className="font-display text-xs uppercase tracking-[.28em] text-gold">Custom tailoring</p>
-        <h1 className="mt-3 font-serif text-5xl">Build your bespoke order</h1>
+        <h1 className="mt-3 font-serif text-5xl text-[var(--fg)]">Build your bespoke order</h1>
         <div className="mt-8 grid grid-cols-6 gap-2">
           {Array.from({ length: 6 }).map((_, index) => (
             <button
               key={index}
               onClick={() => setStep(index + 1)}
-              className={`h-2 transition ${step >= index + 1 ? "bg-gold" : "bg-white/15 light:bg-black/15"}`}
+              className={`h-2 transition ${step >= index + 1 ? "bg-gold" : "bg-[var(--line)]"}`}
               aria-label={`Go to step ${index + 1}`}
             />
           ))}
@@ -79,7 +79,7 @@ export default function TailoringPage() {
                 <input type="file" accept="image/png,image/jpeg" multiple className="sr-only" />
                 <span>
                   <Upload className="mx-auto text-gold" size={38} />
-                  <span className="mt-4 block font-serif text-2xl">Drag and drop JPG or PNG files</span>
+                  <span className="mt-4 block font-serif text-2xl text-[var(--fg)]">Drag and drop JPG or PNG files</span>
                   <span className="mt-2 block text-sm text-muted">Use references for neckline, embroidery, fit, or fabric mood.</span>
                 </span>
               </label>
@@ -121,7 +121,7 @@ export default function TailoringPage() {
                 </div>
                 <div className="border hairline p-6">
                   <Ruler className="text-gold" size={34} />
-                  <h3 className="mt-5 font-serif text-2xl">Measurement guide</h3>
+                  <h3 className="mt-5 font-serif text-2xl text-[var(--fg)]">Measurement guide</h3>
                   <div className="mt-6 grid aspect-[2/3] place-items-center border border-dashed hairline">
                     <ImagePlus className="text-muted" size={48} />
                   </div>
@@ -206,7 +206,7 @@ export default function TailoringPage() {
 function Step({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <>
-      <h2 className="mb-6 font-serif text-3xl">{title}</h2>
+      <h2 className="mb-6 font-serif text-3xl text-[var(--fg)]">{title}</h2>
       {children}
     </>
   );
