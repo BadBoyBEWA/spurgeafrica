@@ -14,6 +14,8 @@ import {
 import { getProducts } from "@/lib/product-queries";
 import { getCollections } from "@/lib/collection-queries";
 
+export const dynamic = "force-dynamic";
+
 export default async function HomePage() {
   const products = await getProducts();
   const collections = await getCollections();
