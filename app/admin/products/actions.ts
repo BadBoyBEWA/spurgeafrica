@@ -96,3 +96,47 @@ export async function updateProduct(id: string, formData: FormData) {
   revalidatePath(`/collections`);
   revalidatePath(`/`);
 }
+
+export async function hardDeleteProduct(productId: string) {
+  await requireAuth();
+  // If the product has order history, soft-delete to preserve data integrity
+  const orderCount = await prisma.orderItem.count({ where: { productId } });
+  if (orderCount > 0) {
+    await prisma.product.update({
+      where: { id: productId },
+      data: { isActive: false },
+    });
+  } else {
+    await prisma.product.delete({ where: { id: productId } });
+  }
+  revalidatePath(`/admin/products`);
+  revalidatePath(`/collections`);
+  revalidatePath(`/`);
+}
+
+export async function bulkDeleteProducts(productIds: string[]) {
+  await requireAuth();
+  if (!productIds.length) return;
+  // Separate products with and without order history
+  const withOrders = await prisma.orderItem.findMany({
+    where: { productId: { in: productIds } },
+    select: { productId: true },
+    distinct: ["productId"],
+  });
+  const withOrderIds = withOrders.map((i) => i.productId);
+  const withoutOrderIds = productIds.filter((id) => !withOrderIds.includes(id));
+  if (withOrderIds.length > 0) {
+    await prisma.product.updateMany({
+      where: { id: { in: withOrderIds } },
+      data: { isActive: false },
+    });
+  }
+  if (withoutOrderIds.length > 0) {
+    await prisma.product.deleteMany({
+      where: { id: { in: withoutOrderIds } },
+    });
+  }
+  revalidatePath(`/admin/products`);
+  revalidatePath(`/collections`);
+  revalidatePath(`/`);
+}

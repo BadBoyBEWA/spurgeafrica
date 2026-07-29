@@ -4,17 +4,19 @@ import { Instagram, Mail, Star } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
+import { CategoryCarousel } from "@/components/CategoryCarousel";
 import {
-  categories,
   craftHighlights,
   heroImage,
   processSteps,
   testimonials
 } from "@/lib/data";
 import { getProducts } from "@/lib/product-queries";
+import { getCollections } from "@/lib/collection-queries";
 
 export default async function HomePage() {
   const products = await getProducts();
+  const collections = await getCollections();
   return (
     <main>
       <section className="relative min-h-screen overflow-hidden bg-night">
@@ -51,23 +53,7 @@ export default async function HomePage() {
         <Reveal>
           <SectionHeading kicker="Collections" title="Ceremonial presence, everyday ease" copy="Shop curated silhouettes shaped by Nigerian tailoring culture and a modern luxury lens." />
         </Reveal>
-        <div className="mx-auto flex max-w-7xl gap-6 overflow-x-auto snap-x snap-mandatory pb-8 pt-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
-          {categories.map(category => (
-            <Link key={category.title} href={category.href} className="group flex-shrink-0 snap-start flex flex-col items-center gap-4">
-              <div className="relative h-48 w-48 overflow-hidden rounded-full border hairline shadow-soft md:h-64 md:w-64">
-                <Image
-                  src={category.image}
-                  alt={category.title}
-                  fill
-                  sizes="(max-width: 1024px) 250px, 300px"
-                  className="object-cover transition duration-700 group-hover:scale-105"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-              </div>
-              <h3 className="font-serif text-xl text-[var(--fg)]">{category.title}</h3>
-            </Link>
-          ))}
-        </div>
+        <CategoryCarousel items={collections} />
       </section>
 
       <section className="border-y hairline px-4 py-20 sm:px-6 lg:px-8">
@@ -95,7 +81,7 @@ export default async function HomePage() {
         <Reveal>
           <SectionHeading kicker="New arrivals" title="Fresh from the cutting table" />
         </Reveal>
-        <div className="mx-auto grid max-w-7xl gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mx-auto grid max-w-7xl gap-5 grid-cols-2 lg:grid-cols-4">
           {products.slice(0, 8).map(product => <ProductCard key={product.id} product={product} />)}
         </div>
       </section>

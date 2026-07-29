@@ -16,6 +16,16 @@ export async function getProducts(filters?: { category?: string; occasion?: stri
   }));
 }
 
+export async function getAllProducts() {
+  const products = await prisma.product.findMany({
+    orderBy: { createdAt: "desc" },
+  });
+  return products.map((p) => ({
+    ...p,
+    gallery: JSON.parse(p.gallery) as string[],
+  }));
+}
+
 export async function getProductBySlug(slug: string) {
   const product = await prisma.product.findFirst({
     where: {

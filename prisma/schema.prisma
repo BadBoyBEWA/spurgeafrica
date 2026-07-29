@@ -111,3 +111,16 @@ model TailoringEnquiry {
   status         String   @default("pending")
   createdAt      DateTime @default(now())
 }
+
+model Collection {
+  id        String   @id @default(cuid())
+  title     String
+  slug      String   @unique
+  href      String
+  image     String
+  sortOrder Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+

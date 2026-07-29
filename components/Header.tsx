@@ -21,8 +21,10 @@ export function Header() {
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b hairline bg-[var(--bg)] text-[var(--fg)] shadow-[0_10px_40px_rgba(0,0,0,.16)] backdrop-blur-xl transition-all duration-300 ${
-        scrolled ? "py-3" : "py-4"
+      className={`fixed inset-x-0 top-0 z-50 text-cream transition-all duration-500 ${
+        scrolled
+          ? "bg-night/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,.45)] border-b border-white/10 py-3"
+          : "bg-transparent border-b border-transparent py-5"
       }`}
     >
       <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
@@ -31,7 +33,7 @@ export function Header() {
         </Link>
         <div className="hidden items-center gap-7 lg:flex">
           {navLinks.map(([label, href]) => (
-            <Link key={href} href={href} className="font-display text-xs uppercase tracking-[.22em] text-[var(--fg)]/80 transition hover:text-gold">
+            <Link key={href} href={href} className="font-display text-xs uppercase tracking-[.22em] text-cream/80 transition hover:text-gold">
               {label}
             </Link>
           ))}
@@ -39,14 +41,14 @@ export function Header() {
         <div className="flex items-center gap-2">
           <button
             aria-label="Toggle color mode"
-            className="grid h-10 w-10 place-items-center rounded-full border hairline transition hover:border-gold hover:text-gold"
+            className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold"
             onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
           >
             {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
           </button>
           <button
             aria-label="Open cart"
-            className={`relative grid h-10 w-10 place-items-center rounded-full border hairline transition hover:border-gold hover:text-gold ${count ? "animate-pulseCart" : ""}`}
+            className={`relative grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold ${count ? "animate-pulseCart" : ""}`}
             onClick={openCart}
           >
             <ShoppingBag size={18} />
@@ -58,7 +60,7 @@ export function Header() {
           </button>
           <button
             aria-label="Open menu"
-            className="grid h-10 w-10 place-items-center rounded-full border hairline lg:hidden"
+            className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream lg:hidden"
             onClick={() => setMobileOpen(true)}
           >
             <Menu size={19} />
