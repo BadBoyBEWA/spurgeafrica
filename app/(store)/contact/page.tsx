@@ -9,7 +9,7 @@ export default function ContactPage() {
           <h1 className="mt-3 font-serif text-5xl">Speak with the atelier</h1>
           <p className="mt-5 leading-8 text-muted">Ask about ready-to-wear availability, custom timelines, measurements, or delivery.</p>
           <div className="mt-8 grid gap-3">
-            <a href="https://wa.me/2348000000000" className="flex items-center gap-3 border hairline p-4 hover:border-gold"><Phone size={18} /> WhatsApp</a>
+            <a href="tel:+2348115656501" className="flex items-center gap-3 border hairline p-4 hover:border-gold"><Phone size={18} /> 08115656501</a>
             <a href="https://instagram.com" className="flex items-center gap-3 border hairline p-4 hover:border-gold"><Instagram size={18} /> Instagram</a>
             <a href="https://tiktok.com" className="flex items-center gap-3 border hairline p-4 hover:border-gold"><Music2 size={18} /> TikTok</a>
           </div>
@@ -23,7 +23,7 @@ export default function ContactPage() {
             <button className="bg-gold px-7 py-4 font-display text-xs uppercase tracking-[.22em] text-night">Send Message</button>
           </form>
           <div className="mt-8 grid min-h-72 place-items-center border border-dashed hairline text-center text-muted">
-            <span><MapPin className="mx-auto mb-3 text-gold" /> Google Map Placeholder</span>
+            <span><MapPin className="mx-auto mb-3 text-gold" /> Eleganza Gardens Estate, Lekki, Lagos</span>
           </div>
         </section>
       </div>

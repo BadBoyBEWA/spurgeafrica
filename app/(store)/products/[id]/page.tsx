@@ -34,6 +34,31 @@ export default async function ProductDetailPage({ params }: { params: Promise<{ 
             <p><strong className="text-[var(--fg)]">Finish:</strong> Hand detailed</p>
           </div>
           <ProductActions product={{ id: product.id, name: product.name, price: product.price, image: product.image }} />
+          {/* Stock Status & Delivery Timeline */}
+          <div className="mt-6 flex flex-wrap items-center gap-4 border-t hairline pt-6">
+            <div className="flex items-center gap-2">
+              {product.stock !== undefined && product.stock > 5 ? (
+                <span className="flex items-center gap-1.5 rounded-full bg-green-500/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-green-400">
+                  <span className="h-2 w-2 rounded-full bg-green-400" /> In Stock
+                </span>
+              ) : product.stock !== undefined && product.stock > 0 ? (
+                <span className="flex items-center gap-1.5 rounded-full bg-amber-500/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-amber-400">
+                  <span className="h-2 w-2 rounded-full bg-amber-400" /> Low Stock
+                </span>
+              ) : (
+                <span className="flex items-center gap-1.5 rounded-full bg-blue-500/20 px-3 py-1.5 text-xs font-semibold uppercase tracking-wide text-blue-400">
+                  <span className="h-2 w-2 rounded-full bg-blue-400" /> Made to Order
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-muted">
+              {product.stock !== undefined && product.stock > 5
+                ? "Ships in 3\u20137 business days"
+                : product.stock !== undefined && product.stock > 0
+                ? "Ships in 5\u201310 business days"
+                : "Production timeline: 2\u20133 weeks"}
+            </p>
+          </div>
           {["Size Guide", "Shipping Info", "Customer Reviews"].map((title, index) => (
             <details key={title} className="mt-5 border-b hairline pb-5" open={index === 0}>
               <summary className="flex cursor-pointer list-none items-center justify-between font-medium">

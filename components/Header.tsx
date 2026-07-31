@@ -1,13 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { LockKeyhole, Menu, Moon, ShoppingBag, Sun, X } from "lucide-react";
+import { Menu, Moon, Search, ShoppingBag, Sun, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { navLinks } from "@/lib/data";
 import { useCart, useThemeMode } from "@/components/Providers";
+import { SearchModal } from "@/components/SearchModal";
 
 export function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const { count, openCart } = useCart();
   const { theme, setTheme } = useThemeMode();
@@ -20,53 +22,63 @@ export function Header() {
   }, []);
 
   return (
-    <header
-      className={`fixed inset-x-0 top-0 z-50 text-cream transition-all duration-500 ${
-        scrolled
-          ? "bg-night/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,.45)] border-b border-white/10 py-3"
-          : "bg-transparent border-b border-transparent py-5"
-      }`}
-    >
-      <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
-        <Link href="/" className="font-serif text-2xl tracking-wide">
-          Spurge <span className="text-gold">Africa</span>
-        </Link>
-        <div className="hidden items-center gap-7 lg:flex">
-          {navLinks.map(([label, href]) => (
-            <Link key={href} href={href} className="font-display text-xs uppercase tracking-[.22em] text-cream/80 transition hover:text-gold">
-              {label}
-            </Link>
-          ))}
-        </div>
-        <div className="flex items-center gap-2">
-          <button
-            aria-label="Toggle color mode"
-            className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          >
-            {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-          </button>
-          <button
-            aria-label="Open cart"
-            className={`relative grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold ${count ? "animate-pulseCart" : ""}`}
-            onClick={openCart}
-          >
-            <ShoppingBag size={18} />
-            {count > 0 && (
-              <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[11px] font-bold text-night">
-                {count}
-              </span>
-            )}
-          </button>
-          <button
-            aria-label="Open menu"
-            className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream lg:hidden"
-            onClick={() => setMobileOpen(true)}
-          >
-            <Menu size={19} />
-          </button>
-        </div>
-      </nav>
+    <>
+      <header
+        className={`fixed inset-x-0 top-0 z-50 text-cream transition-all duration-500 ${
+          scrolled
+            ? "bg-night/90 backdrop-blur-xl shadow-[0_8px_32px_rgba(0,0,0,.45)] border-b border-white/10 py-3"
+            : "bg-transparent border-b border-transparent py-5"
+        }`}
+      >
+        <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
+          <Link href="/" className="font-serif text-2xl tracking-wide">
+            Spurge <span className="text-gold">Africa</span>
+          </Link>
+          <div className="hidden items-center gap-7 lg:flex">
+            {navLinks.map(([label, href]) => (
+              <Link key={href} href={href} className="font-display text-xs uppercase tracking-[.22em] text-cream/80 transition hover:text-gold">
+                {label}
+              </Link>
+            ))}
+          </div>
+          <div className="flex items-center gap-2">
+            <button
+              aria-label="Open search"
+              className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold"
+              onClick={() => setSearchOpen(true)}
+            >
+              <Search size={18} />
+            </button>
+            <button
+              aria-label="Toggle color mode"
+              className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            >
+              {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
+            <button
+              aria-label="Open cart"
+              className={`relative grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold ${count ? "animate-pulseCart" : ""}`}
+              onClick={openCart}
+            >
+              <ShoppingBag size={18} />
+              {count > 0 && (
+                <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-gold px-1 text-[11px] font-bold text-night">
+                  {count}
+                </span>
+              )}
+            </button>
+            <button
+              aria-label="Open menu"
+              className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream lg:hidden"
+              onClick={() => setMobileOpen(true)}
+            >
+              <Menu size={19} />
+            </button>
+          </div>
+        </nav>
+      </header>
+
       {mobileOpen && (
         <div className="fixed inset-0 z-[60] bg-night/95 p-5 text-cream lg:hidden backdrop-blur-xl">
           <div className="flex items-center justify-between">
@@ -95,6 +107,8 @@ export function Header() {
           </div>
         </div>
       )}
-    </header>
+
+      <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+    </>
   );
 }

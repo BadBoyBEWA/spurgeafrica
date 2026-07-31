@@ -6,10 +6,10 @@ import { ProductCard } from "@/components/ProductCard";
 import type { Product } from "@/lib/data";
 
 const filters = {
-  category: ["All", "Agbada", "Senator", "Kaftan", "Casual"],
+  category: ["All", "Agbada", "Senator", "Kaftan", "Fila", "Pants", "Danshiki"],
   price: ["All", "Under 100k", "100k-200k", "Over 200k"],
-  color: ["All", "Gold", "Emerald", "Terracotta", "Black", "Cream", "Navy"],
-  fabric: ["All", "Ankara", "Cashmere", "Lace", "Guinea Brocade", "Senator Material"],
+  color: ["All", "Gold", "Emerald", "Terracotta", "Black", "Cream", "Navy", "Multicolor", "Ivory"],
+  fabric: ["All", "Ankara", "Cashmere", "Lace", "Guinea Brocade", "Senator Material", "Silk Blend", "Cotton Jacquard", "Velvet"],
   occasion: ["All", "Wedding", "Corporate", "Casual", "Traditional", "Luxury"]
 };
 

@@ -21,6 +21,7 @@ export type Product = {
   description: string;
   image: string;
   gallery: string[];
+  stock?: number;
 };
 
 export const navLinks = [
@@ -32,34 +33,38 @@ export const navLinks = [
   ["Contact", "/contact"]
 ] as const;
 
-export const heroImage =
-  "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=2200&q=85";
+export const heroImage = "/images/herosa.jpeg";
 
 export const categories = [
   {
     title: "Agbada",
     href: "/collections?category=Agbada",
-    image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=900&q=80"
+    image: "/images/SP Agbada.png"
   },
   {
     title: "Senator Wear",
     href: "/collections?category=Senator",
-    image: "https://images.unsplash.com/photo-1541099649105-f69ad21f3246?auto=format&fit=crop&w=900&q=80"
+    image: "/images/SP Senator.png"
   },
   {
-    title: "Kaftan",
+    title: "Kaftans 2-piece",
     href: "/collections?category=Kaftan",
-    image: "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?auto=format&fit=crop&w=900&q=80"
+    image: "/images/SP 2-piece.png"
   },
   {
-    title: "Casual Native",
-    href: "/collections?category=Casual",
-    image: "https://images.unsplash.com/photo-1521334884684-d80222895322?auto=format&fit=crop&w=900&q=80"
+    title: "Fila",
+    href: "/collections?category=Fila",
+    image: "/images/SP Fila.png"
   },
   {
-    title: "Wedding Collection",
-    href: "/collections?occasion=Wedding",
-    image: "https://images.unsplash.com/photo-1514790193030-c89d266d5a9d?auto=format&fit=crop&w=900&q=80"
+    title: "Pants",
+    href: "/collections?category=Pants",
+    image: "/images/SP Pants.png"
+  },
+  {
+    title: "Danshiki",
+    href: "/collections?category=Danshiki",
+    image: "/images/SP Danshiki.png"
   }
 ];
 
@@ -105,20 +110,20 @@ export const products: Product[] = [
     fabric: "Silk Blend",
     occasion: "Traditional",
     description:
-      "A fluid kaftan with warm terracotta depth, invisible pockets, and restrained neckline detail.",
+      "A fluid 2-piece kaftan with warm terracotta depth, invisible pockets, and restrained neckline detail.",
     image: "https://images.unsplash.com/photo-1503342313934-5f7f38d2cfe5?auto=format&fit=crop&w=1200&q=85",
     gallery: gallerySeed
   },
   {
-    id: "midnight-native",
-    name: "Midnight Native Set",
-    category: "Casual",
+    id: "midnight-danshiki",
+    name: "Midnight Danshiki Set",
+    category: "Danshiki",
     price: 88000,
     color: "Black",
     fabric: "Cotton Jacquard",
     occasion: "Casual",
     description:
-      "Soft native separates made for everyday presence, finished with jacquard texture and matte buttons.",
+      "Soft danshiki separates made for everyday presence, finished with jacquard texture and matte buttons.",
     image: "https://images.unsplash.com/photo-1542060748-10c28b62716f?auto=format&fit=crop&w=1200&q=85",
     gallery: gallerySeed
   },
@@ -136,15 +141,15 @@ export const products: Product[] = [
     gallery: gallerySeed
   },
   {
-    id: "ankara-weekend",
-    name: "Ankara Weekend Shirt",
-    category: "Casual",
-    price: 52000,
+    id: "heritage-fila",
+    name: "Heritage Velvet Fila Cap",
+    category: "Fila",
+    price: 35000,
     color: "Multicolor",
-    fabric: "Ankara",
-    occasion: "Casual",
+    fabric: "Velvet",
+    occasion: "Traditional",
     description:
-      "A relaxed statement shirt cut from vibrant Ankara cotton for warm afternoons and late dinners.",
+      "Handcrafted velvet fila cap designed to complement traditional agbada and senator attire.",
     image: "https://images.unsplash.com/photo-1512436991641-6745cdb1723f?auto=format&fit=crop&w=1200&q=85",
     gallery: gallerySeed
   },
@@ -157,20 +162,20 @@ export const products: Product[] = [
     fabric: "Lace",
     occasion: "Luxury",
     description:
-      "A rare lace kaftan with a structured collar, layered transparency, and precise tonal finishing.",
+      "A rare 2-piece lace kaftan with a structured collar, layered transparency, and precise tonal finishing.",
     image: "https://images.unsplash.com/photo-1536766768598-e09213fdcf22?auto=format&fit=crop&w=1200&q=85",
     gallery: gallerySeed
   },
   {
-    id: "heritage-senator",
-    name: "Heritage Senator Suit",
-    category: "Senator",
-    price: 125000,
+    id: "tailored-native-pants",
+    name: "Tailored Executive Pants",
+    category: "Pants",
+    price: 65000,
     color: "Navy",
     fabric: "Cashmere",
     occasion: "Corporate",
     description:
-      "A boardroom-ready senator suit with a longline top, discreet embroidery, and tailored trousers.",
+      "Crisp, custom-tailored native trousers crafted from premium cashmere blend fabric.",
     image: "https://images.unsplash.com/photo-1517832207067-4db24a2ae47c?auto=format&fit=crop&w=1200&q=85",
     gallery: gallerySeed
   }

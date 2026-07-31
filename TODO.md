@@ -1,19 +1,16 @@
-# Fix Seed Error - Plan Steps
+# Implementation Plan
 
-## Step 1: Update `prisma/schema.prisma` ✅
-Replaced existing `playing_with_neon` model with all 8 required models:
-- AdminUser, Product, Order, OrderItem, Payment, ContactMessage, NewsletterSubscriber, TailoringEnquiry
+## Steps
 
-## Step 2: Run `npx prisma generate` ✅
-Prisma Client v6.19.3 generated successfully to `node_modules/@prisma/client`.
-
-## Step 3: Run `npx prisma db push` ✅
-Database schema synced to PostgreSQL (Neon). The old `playing_with_neon` table was dropped and all new tables created.
-
-## Step 4: Run the seed command ✅
-```
-Admin user created: admin@spurgeafrica.com
-Products seeded.
-```
-✔ Seed completed successfully — no more TypeError.
+- [x] 1. Update Footer.tsx - Add contact info (phone, address), Shipping & Return Policy, Cancellation & Refund Policy, stock/delivery info
+- [x] 2. Create Policies page (app/(store)/policies/page.tsx) - Shipping & Return + Cancellation & Refund
+- [x] 3. Update CategoryCarousel.tsx - Infinite loop scrolling
+- [x] 4. Update ProductCard.tsx - Add stock badge and delivery timeline
+- [x] 5. Update Product detail page - Add stock status + delivery timeline section
+- [x] 6. Update Contact page - Update phone to 08115656501 and add address
+- [x] 7. Comment out the marquee ticker on the home page
+- [x] 8. Comment out the testimonials section on the home page
+- [x] 9. Fix footer links to point to correct destinations (categories, policies, pages)
+- [x] 10. Comment out the Instagram feed section on the home page
+- [x] 11. Add spacing between custom tailoring and newsletter signup sections
 

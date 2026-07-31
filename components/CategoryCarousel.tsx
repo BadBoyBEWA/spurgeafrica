@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useCallback } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -16,14 +16,28 @@ type CategoryItem = {
 export function CategoryCarousel({ items = categories }: { items?: CategoryItem[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  function scroll(direction: "left" | "right") {
-    if (!scrollRef.current) return;
+  const scroll = useCallback((direction: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
     const amount = 280;
-    scrollRef.current.scrollBy({
-      left: direction === "right" ? amount : -amount,
-      behavior: "smooth",
-    });
-  }
+    const maxScroll = el.scrollWidth - el.clientWidth;
+
+    if (direction === "right") {
+      if (el.scrollLeft + amount >= maxScroll) {
+        // Reached end — wrap to beginning
+        el.scrollTo({ left: 0, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: amount, behavior: "smooth" });
+      }
+    } else {
+      if (el.scrollLeft - amount <= 0) {
+        // Reached beginning — wrap to end
+        el.scrollTo({ left: maxScroll, behavior: "smooth" });
+      } else {
+        el.scrollBy({ left: -amount, behavior: "smooth" });
+      }
+    }
+  }, []);
 
   const displayItems: CategoryItem[] = (items && items.length > 0 ? items : categories) as CategoryItem[];
 
@@ -50,7 +64,7 @@ export function CategoryCarousel({ items = categories }: { items?: CategoryItem[
       {/* Scrollable strip */}
       <div
         ref={scrollRef}
-        className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-8 pb-8 pt-4 lg:px-0 lg:justify-center [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+        className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-4 pb-8 pt-4 sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
         {displayItems.map((category) => (
           <Link

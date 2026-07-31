@@ -1,24 +1,21 @@
-import Image from "next/image";
 import Link from "next/link";
-import { Instagram, Mail, Star } from "lucide-react";
+import { Mail } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeading } from "@/components/SectionHeading";
 import { CategoryCarousel } from "@/components/CategoryCarousel";
 import {
+  categories,
   craftHighlights,
   heroImage,
-  processSteps,
-  testimonials
+  processSteps
 } from "@/lib/data";
 import { getProducts } from "@/lib/product-queries";
-import { getCollections } from "@/lib/collection-queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const products = await getProducts();
-  const collections = await getCollections();
   return (
     <main>
       <section className="relative min-h-screen overflow-hidden bg-night">
@@ -29,8 +26,8 @@ export default async function HomePage() {
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-night/70 to-[var(--bg)]" />
         <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-16 pt-32 sm:px-6 lg:px-8">
           <Reveal className="max-w-3xl">
-            <p className="font-display text-xs uppercase tracking-[.32em] text-gold">Ready-to-wear and bespoke tailoring</p>
-            <h1 className="mt-5 font-serif text-6xl leading-[.95] text-cream drop-shadow-[0_4px_22px_rgba(0,0,0,.65)] sm:text-7xl lg:text-8xl">Redefine African Luxury</h1>
+            <p className="font-display text-xs uppercase tracking-[.32em] text-gold">Contemporary African Fashion</p>
+            <h1 className="mt-5 font-serif text-6xl leading-[.95] text-cream drop-shadow-[0_4px_22px_rgba(0,0,0,.65)] sm:text-7xl lg:text-8xl">Contemporary African Fashion,<br />Crafted for Every Occasion.</h1>
             <p className="mt-6 max-w-xl text-base leading-8 text-cream/85 drop-shadow-[0_2px_14px_rgba(0,0,0,.8)]">
               Editorial silhouettes, heritage fabrics, and precision tailoring for ceremonies, boardrooms, and modern African life.
             </p>
@@ -44,27 +41,31 @@ export default async function HomePage() {
             </div>
           </Reveal>
         </div>
-        <div className="absolute bottom-0 left-0 right-0 overflow-hidden border-y border-white/10 bg-night/80 py-3 backdrop-blur">
+        {/* Marquee ticker – temporarily hidden */}
+        {/* <div className="absolute bottom-0 left-0 right-0 overflow-hidden border-y border-white/10 bg-night/80 py-3 backdrop-blur">
           <div className="flex w-[200%] animate-marquee gap-10 font-display text-xs uppercase tracking-[.28em] text-cream/75">
             {Array.from({ length: 12 }).map((_, index) => <span key={index}>Bespoke Agbada • Luxury Senator Wear • Wedding Tailoring</span>)}
           </div>
-        </div>
+        </div> */}
       </section>
 
       <section className="relative z-10 bg-[var(--bg)] px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
-          <SectionHeading kicker="Collections" title="Ceremonial presence, everyday ease" copy="Shop curated silhouettes shaped by Nigerian tailoring culture and a modern luxury lens." />
+          <SectionHeading kicker="Shop by Category" title="Explore Our Collections" />
         </Reveal>
-        <CategoryCarousel items={collections} />
+        <CategoryCarousel items={categories} />
       </section>
 
       <section className="border-y hairline px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.9fr_1.1fr]">
           <Reveal>
             <p className="font-display text-xs uppercase tracking-[.28em] text-gold">About the atelier</p>
-            <h2 className="mt-3 font-serif text-5xl">Built around fabric, fit, and quiet authority.</h2>
+            <h2 className="mt-3 font-serif text-5xl">Rooted in Heritage. Designed for Today.</h2>
             <p className="mt-6 leading-8 text-muted">
-              Spurge Africa creates ready-to-wear and custom pieces for men who want tradition without costume and luxury without noise.
+              At Spurge Africa, we believe African fashion deserves to be experienced with the same level of craftsmanship, convenience, and attention to detail as the world&apos;s leading fashion houses.
+            </p>
+            <p className="mt-4 leading-8 text-muted">
+              Every piece is thoughtfully designed and carefully crafted to celebrate heritage while embracing contemporary style. Whether you&apos;re choosing from our ready-to-wear collections or commissioning a bespoke garment, our commitment remains the same: exceptional quality, precise tailoring, and an experience worthy of life&apos;s most meaningful moments.
             </p>
           </Reveal>
           <div className="grid gap-4 sm:grid-cols-2">
@@ -112,7 +113,8 @@ export default async function HomePage() {
         </div>
       </section>
 
-      <section className="px-4 py-20 sm:px-6 lg:px-8">
+      {/* Testimonials – temporarily hidden */}
+      {/* <section className="px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
           <SectionHeading kicker="Testimonials" title="Clients in full voice" />
         </Reveal>
@@ -133,9 +135,10 @@ export default async function HomePage() {
             </Reveal>
           ))}
         </div>
-      </section>
+      </section> */}
 
-      <section className="px-4 pb-20 sm:px-6 lg:px-8">
+      {/* Instagram feed – temporarily hidden */}
+      {/* <section className="px-4 pb-20 sm:px-6 lg:px-8">
         <Reveal>
           <SectionHeading kicker="Instagram" title="Seen in texture and motion" />
         </Reveal>
@@ -151,9 +154,9 @@ export default async function HomePage() {
             </a>
           ))}
         </div>
-      </section>
+      </section> */}
 
-      <section className="px-4 pb-24 sm:px-6 lg:px-8">
+      <section className="px-4 py-24 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <Mail className="mx-auto text-gold" size={30} />
           <h2 className="mt-4 font-serif text-4xl">Join the private list</h2>
@@ -166,3 +169,4 @@ export default async function HomePage() {
     </main>
   );
 }
+

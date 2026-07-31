@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Check, ImagePlus, Ruler, Upload } from "lucide-react";
 
-const outfitTypes = ["Agbada", "Senator", "Kaftan", "Casual Native", "Others"];
+const outfitTypes = ["Agbada", "Senator Wear", "Kaftans 2-piece", "Fila", "Pants", "Danshiki", "Others"];
 const fabrics = ["Ankara", "Cashmere", "Lace", "Guinea Brocade", "Senator Material", "Not Sure"];
 const measurementFields = [
   "height", "neck", "shoulder", "chest", "waist", "hip", "sleeve length", "arm circumference",
