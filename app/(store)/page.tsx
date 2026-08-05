@@ -11,26 +11,40 @@ import {
   processSteps
 } from "@/lib/data";
 import { getProducts } from "@/lib/product-queries";
+import { getCollections } from "@/lib/collection-queries";
 
 export const dynamic = "force-dynamic";
 
 export default async function HomePage() {
   const products = await getProducts();
+  const collections = await getCollections();
+  
+  // Start with static categories from data.ts, then add new collections from dashboard
+  const categoryItems = [
+    ...categories,
+    ...collections.map(col => ({
+      id: col.id,
+      title: col.title,
+      href: col.href,
+      image: col.image
+    }))
+  ];
+  
   return (
     <main>
       <section className="relative min-h-screen overflow-hidden bg-night">
         <div
-          className="absolute inset-0 scale-105 bg-cover bg-center bg-fixed"
+          className="absolute inset-0 bg-cover bg-center bg-fixed object-cover"
           style={{ backgroundImage: `url(${heroImage})` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-night/70 to-[var(--bg)]" />
         <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-16 pt-32 sm:px-6 lg:px-8">
-          <Reveal className="max-w-3xl">
+          <Reveal className="max-w-2xl">
             <p className="font-display text-xs uppercase tracking-[.32em] text-gold">Contemporary African Fashion</p>
-            <h1 className="mt-5 font-serif text-6xl leading-[.95] text-cream drop-shadow-[0_4px_22px_rgba(0,0,0,.65)] sm:text-7xl lg:text-8xl">Contemporary African Fashion,<br />Crafted for Every Occasion.</h1>
-            <p className="mt-6 max-w-xl text-base leading-8 text-cream/85 drop-shadow-[0_2px_14px_rgba(0,0,0,.8)]">
+            <h1 className="mt-5 font-serif text-5xl leading-[.95] text-cream drop-shadow-[0_4px_22px_rgba(0,0,0,.65)] sm:text-6xl lg:text-7xl">Crafted for Every Occasion</h1>
+            {/* <p className="mt-6 max-w-lg text-sm leading-7 text-cream/85 drop-shadow-[0_2px_14px_rgba(0,0,0,.8)]">
               Editorial silhouettes, heritage fabrics, and precision tailoring for ceremonies, boardrooms, and modern African life.
-            </p>
+            </p> */}
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <Link href="/collections" className="bg-gold px-7 py-4 text-center font-display text-xs uppercase tracking-[.22em] text-night transition hover:bg-terracotta hover:text-cream">
                 Shop Collection
@@ -51,15 +65,15 @@ export default async function HomePage() {
 
       <section className="relative z-10 bg-[var(--bg)] px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
-          <SectionHeading kicker="Shop by Category" title="Explore Our Collections" />
+          <SectionHeading kicker="" title="Explore Our Collections" />
         </Reveal>
-        <CategoryCarousel items={categories} />
+        <CategoryCarousel items={categoryItems} />
       </section>
 
       <section className="border-y hairline px-4 py-20 sm:px-6 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[.9fr_1.1fr]">
           <Reveal>
-            <p className="font-display text-xs uppercase tracking-[.28em] text-gold">About the atelier</p>
+            {/* <p className="font-display text-xs uppercase tracking-[.28em] text-gold">About the atelier</p> */}
             <h2 className="mt-3 font-serif text-5xl">Rooted in Heritage. Designed for Today.</h2>
             <p className="mt-6 leading-8 text-muted">
               At Spurge Africa, we believe African fashion deserves to be experienced with the same level of craftsmanship, convenience, and attention to detail as the world&apos;s leading fashion houses.
@@ -82,7 +96,7 @@ export default async function HomePage() {
 
       <section className="px-4 py-20 sm:px-6 lg:px-8">
         <Reveal>
-          <SectionHeading kicker="New arrivals" title="Fresh from the cutting table" />
+          <SectionHeading kicker="" title="Curated Collection" />
         </Reveal>
         <div className="mx-auto grid max-w-7xl gap-5 grid-cols-2 lg:grid-cols-4">
           {products.slice(0, 8).map(product => <ProductCard key={product.id} product={product} />)}
@@ -93,15 +107,16 @@ export default async function HomePage() {
         <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1fr_1.2fr]">
           <Reveal>
             <p className="font-display text-xs uppercase tracking-[.28em] text-[var(--fg)]">Custom tailoring</p>
-            <h2 className="mt-3 font-serif text-5xl">Your measurements. Your fabric mood. Our atelier.</h2>
+            <h2 className="mt-3 font-serif text-5xl">The entire process takes under 5 minutes.</h2>
+            <p className="mt-5 font-serif text-xl text-muted italic leading-8">Not 20. Not 10. Around 5 minutes.</p>
             <p className="mt-6 leading-8 text-muted">
-              Start with a silhouette, upload inspiration, share measurements, and receive a tailored order plan.
+              We collect just enough to confidently start a conversation — choose your outfit, share inspiration, submit measurements, and we&apos;ll handle the rest.
             </p>
             <Link href="/tailoring" className="mt-8 inline-block bg-gold px-7 py-4 font-display text-xs uppercase tracking-[.22em] text-night">
               Start Custom Order
             </Link>
           </Reveal>
-          <div className="grid gap-4 sm:grid-cols-4">
+          <div className="grid gap-4 sm:grid-cols-5">
             {processSteps.map(({ title, icon: Icon }, index) => (
               <Reveal key={title} className="border hairline p-5">
                 <span className="text-sm font-semibold text-[var(--fg)]">0{index + 1}</span>
@@ -159,7 +174,10 @@ export default async function HomePage() {
       <section className="px-4 py-24 sm:px-6 lg:px-8">
         <Reveal className="mx-auto max-w-3xl text-center">
           <Mail className="mx-auto text-gold" size={30} />
-          <h2 className="mt-4 font-serif text-4xl">Join the private list</h2>
+          <h2 className="mt-4 font-serif text-4xl">Stay Close To The Craft</h2>
+          <p className="mt-4 leading-7 text-muted">
+            Be the first to know about new collections, exclusive releases, styling inspiration, and stories from the atelier.
+          </p>
           <form action="/api/newsletter" method="post" className="mt-7 flex flex-col gap-3 sm:flex-row">
             <input name="email" type="email" required placeholder="Email address" className="min-h-14 flex-1 border hairline bg-transparent px-4 outline-none" />
             <button className="bg-gold px-7 py-4 font-display text-xs uppercase tracking-[.22em] text-night">Subscribe</button>

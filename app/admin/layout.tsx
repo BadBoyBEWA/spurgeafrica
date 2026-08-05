@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutDashboard, ShoppingBag, Box, Layers, Mail, Users, Scissors, LogOut } from "lucide-react";
+import { LayoutDashboard, ShoppingBag, Box, Layers, Mail, Users, Scissors, ShieldCheck, LogOut } from "lucide-react";
 import { AdminProviders } from "./AdminProviders";
 
 function AdminLayoutInner({ children }: { children: React.ReactNode }) {
@@ -26,6 +26,7 @@ function AdminLayoutInner({ children }: { children: React.ReactNode }) {
     { name: "Messages", href: "/admin/messages", icon: Mail },
     { name: "Subscribers", href: "/admin/subscribers", icon: Users },
     { name: "Tailoring", href: "/admin/tailoring", icon: Scissors },
+    { name: "Audit Logs", href: "/admin/audit-logs", icon: ShieldCheck },
   ];
 
   return (

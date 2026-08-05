@@ -99,18 +99,42 @@ model NewsletterSubscriber {
 }
 
 model TailoringEnquiry {
-  id             String   @id @default(cuid())
-  name           String
-  email          String
-  phone          String
-  styleReference String?
-  measurements   String?
-  budget         String?
-  occasion       String?
-  notes          String?
-  status         String   @default("pending")
-  createdAt      DateTime @default(now())
+  id                    String   @id @default(cuid())
+  name                  String
+  email                 String
+  phone                 String
+  outfitType            String?
+  styleReference        String?
+  fabric                String?
+  fit                   String?
+  gender                String?
+  address               String?
+  state                 String?
+  country               String?
+  postalCode            String?
+  preferredDeliveryDate String?
+  measurements          String?  // JSON string of all measurements
+  images                String?  // JSON string of inspiration images / URLs
+  budget                String?
+  occasion              String?
+  notes                 String?
+  priceQuote            Float?
+  adminNotes            String?
+  status                String   @default("pending")
+  createdAt             DateTime @default(now())
+  updatedAt             DateTime @updatedAt @default(now())
 }
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  adminEmail  String?
+  action      String
+  entityType  String
+  entityId    String
+  details     String?
+  createdAt   DateTime @default(now())
+}
+
 
 model Collection {
   id        String   @id @default(cuid())

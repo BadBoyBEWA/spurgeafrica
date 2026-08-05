@@ -1,12 +1,13 @@
 import {
-  Award,
+  CheckCircle,
   Gem,
+  ImagePlus,
   MapPin,
   Ruler,
   Scissors,
-  ShieldCheck,
   Sparkles,
-  Truck
+  Truck,
+  User
 } from "lucide-react";
 
 export type Product = {
@@ -25,15 +26,14 @@ export type Product = {
 };
 
 export const navLinks = [
-  ["Home", "/"],
-  ["Collections", "/collections"],
+  ["Shop", "/shop"],
   ["Custom Tailoring", "/tailoring"],
-  ["Lookbook", "/lookbook"],
+  // ["Lookbook", "/lookbook"],
   ["About", "/about"],
   ["Contact", "/contact"]
 ] as const;
 
-export const heroImage = "/images/herosa.jpeg";
+export const heroImage = "/images/herosa.png";
 
 export const categories = [
   {
@@ -47,8 +47,13 @@ export const categories = [
     image: "/images/SP Senator.png"
   },
   {
-    title: "Kaftans 2-piece",
+    title: "Kaftans",
     href: "/collections?category=Kaftan",
+    image: "/images/SP Kaftan.png"
+  },
+  {
+    title: "2-Piece",
+    href: "/collections?category=2-piece",
     image: "/images/SP 2-piece.png"
   },
   {
@@ -189,10 +194,11 @@ export const craftHighlights = [
 ];
 
 export const processSteps = [
-  { title: "Choose Style", icon: Sparkles },
-  { title: "Submit Measurements", icon: Ruler },
-  { title: "Production", icon: ShieldCheck },
-  { title: "Delivery", icon: MapPin }
+  { title: "Choose Outfit", icon: Sparkles },
+  { title: "Add Inspiration", icon: ImagePlus },
+  { title: "Measurements", icon: Ruler },
+  { title: "Contact Details", icon: User },
+  { title: "Submit Request", icon: CheckCircle }
 ];
 
 export const testimonials = [

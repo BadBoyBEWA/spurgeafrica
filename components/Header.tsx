@@ -31,8 +31,8 @@ export function Header() {
         }`}
       >
         <nav className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8" aria-label="Primary navigation">
-          <Link href="/" className="font-serif text-2xl tracking-wide">
-            Spurge <span className="text-gold">Africa</span>
+          <Link href="/" className="h-8 w-auto">
+            <img src="/images/logo.png" alt="Spurge Africa" className="h-8 w-auto object-contain" />
           </Link>
           <div className="hidden items-center gap-7 lg:flex">
             {navLinks.map(([label, href]) => (
@@ -49,13 +49,13 @@ export function Header() {
             >
               <Search size={18} />
             </button>
-            <button
+            {/* <button
               aria-label="Toggle color mode"
               className="grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
             >
               {theme === "dark" ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+            </button> */}
             <button
               aria-label="Open cart"
               className={`relative grid h-10 w-10 place-items-center rounded-full border border-cream/25 text-cream transition hover:border-gold hover:text-gold ${count ? "animate-pulseCart" : ""}`}

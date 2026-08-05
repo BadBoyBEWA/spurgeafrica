@@ -13,12 +13,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Validation failed", details: formatZodIssues(parsed.error) }, { status: 400 });
     }
 
-    const { measurements, ...restData } = parsed.data;
+    const { measurements, images, ...restData } = parsed.data;
     
     const enquiry = await prisma.tailoringEnquiry.create({
       data: {
         ...restData,
         measurements: measurements ? JSON.stringify(measurements) : null,
+        images: images && images.length > 0 ? JSON.stringify(images) : null,
       },
     });
 

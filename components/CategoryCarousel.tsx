@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -13,33 +13,50 @@ type CategoryItem = {
   image: string;
 };
 
+const GAP = 24; // matches gap-6 between items
+
 export function CategoryCarousel({ items = categories }: { items?: CategoryItem[] }) {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const scrollIndexRef = useRef(0); // Track total scroll position (can exceed item count)
+  const [displayCounter, setDisplayCounter] = useState(0); // Counter shown to user
+
+  const displayItems: CategoryItem[] = (items && items.length > 0 ? items : categories) as CategoryItem[];
+  
+  // Create an infinite carousel by repeating items 3 times
+  const infiniteItems = [...displayItems, ...displayItems, ...displayItems];
+
+  // Measure the actual width of one item (including its gap)
+  const getItemWidth = useCallback(() => {
+    const el = scrollRef.current;
+    if (!el) return 0;
+    const first = el.querySelector<HTMLElement>("a");
+    if (!first) return 0;
+    return first.offsetWidth + GAP;
+  }, []);
 
   const scroll = useCallback((direction: "left" | "right") => {
     const el = scrollRef.current;
     if (!el) return;
-    const amount = 280;
-    const maxScroll = el.scrollWidth - el.clientWidth;
+    const step = getItemWidth();
+    if (step <= 0) return;
 
     if (direction === "right") {
-      if (el.scrollLeft + amount >= maxScroll) {
-        // Reached end — wrap to beginning
-        el.scrollTo({ left: 0, behavior: "smooth" });
-      } else {
-        el.scrollBy({ left: amount, behavior: "smooth" });
-      }
+      scrollIndexRef.current += 1;
     } else {
-      if (el.scrollLeft - amount <= 0) {
-        // Reached beginning — wrap to end
-        el.scrollTo({ left: maxScroll, behavior: "smooth" });
-      } else {
-        el.scrollBy({ left: -amount, behavior: "smooth" });
-      }
+      scrollIndexRef.current -= 1;
     }
-  }, []);
 
-  const displayItems: CategoryItem[] = (items && items.length > 0 ? items : categories) as CategoryItem[];
+    // Calculate the visual counter (0-based, wraps around)
+    const counter = ((scrollIndexRef.current % displayItems.length) + displayItems.length) % displayItems.length;
+    setDisplayCounter(counter);
+
+    // Scroll by one step in the direction
+    if (direction === "right") {
+      el.scrollBy({ left: step, behavior: "smooth" });
+    } else {
+      el.scrollBy({ left: -step, behavior: "smooth" });
+    }
+  }, [displayItems.length, getItemWidth]);
 
   return (
     <div className="relative mx-auto max-w-7xl">
@@ -61,36 +78,40 @@ export function CategoryCarousel({ items = categories }: { items?: CategoryItem[
         <ChevronRight size={22} />
       </button>
 
-      {/* Scrollable strip */}
+{/* Scrollable strip */}
       <div
         ref={scrollRef}
+
         className="flex gap-6 overflow-x-auto snap-x snap-mandatory px-4 pb-8 pt-4 sm:px-6 lg:px-8 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       >
-        {displayItems.map((category) => (
+      {infiniteItems.map((category, index) => (
           <Link
-            key={category.id || category.title}
+            key={`${index}-${category.id || category.title}`}
             href={category.href}
             className="group flex-shrink-0 snap-start flex flex-col items-center gap-4"
           >
-            <div className="relative h-48 w-48 overflow-hidden rounded-full border border-white/10 shadow-[0_28px_90px_rgba(0,0,0,.32)] md:h-60 md:w-60">
+            <div className="relative h-48 w-48 overflow-hidden rounded-full border border-white/10 shadow-[0_28px_90px_rgba(0,0,0,.32)] bg-white md:h-60 md:w-60">
               <Image
                 src={category.image}
                 alt={category.title}
                 fill
                 sizes="(max-width: 1024px) 200px, 260px"
-                className="object-cover transition duration-700 group-hover:scale-105"
+                className="object-contain transition duration-700 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-              {/* Label inside circle on hover */}
-              <span className="absolute bottom-4 left-0 right-0 text-center font-display text-[10px] uppercase tracking-[.22em] text-gold opacity-0 transition duration-300 group-hover:opacity-100">
-                Shop →
-              </span>
             </div>
             <h3 className="font-serif text-lg text-[var(--fg)] transition group-hover:text-gold">
               {category.title}
             </h3>
           </Link>
         ))}
+      </div>
+
+      {/* Counter Below */}
+      <div className="mt-8 flex items-center justify-center px-4 sm:px-6 lg:px-8">
+        <div className="font-display text-sm tracking-[.22em] text-gold">
+          {String(displayCounter + 1).padStart(2, "0")} / {String(displayItems.length).padStart(2, "0")}
+        </div>
       </div>
     </div>
   );
