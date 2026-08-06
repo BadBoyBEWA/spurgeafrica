@@ -26,7 +26,7 @@ export type Product = {
 };
 
 export const navLinks = [
-  ["Shop", "/shop"],
+  ["Shop", "/collections"],
   ["Custom Tailoring", "/tailoring"],
   // ["Lookbook", "/lookbook"],
   ["About", "/about"],

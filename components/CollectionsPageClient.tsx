@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { ChevronDown, SlidersHorizontal } from "lucide-react";
 import { ProductCard } from "@/components/ProductCard";
 import type { Product } from "@/lib/data";
 
@@ -28,6 +28,7 @@ export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery, pr
     occasion: occasionFromQuery
   });
   const [sort, setSort] = useState("Newest");
+  const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
     setSelected(current => ({ ...current, category: categoryFromQuery, occasion: occasionFromQuery }));
@@ -75,7 +76,18 @@ export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery, pr
           </label>
         </div>
         <div className="mt-8 grid gap-8 lg:grid-cols-[280px_1fr]">
-          <aside className="glass h-fit rounded-3xl p-5">
+          <div className="flex items-center justify-between gap-4 rounded-3xl border border-[var(--line)] bg-[var(--panel)] p-4 md:hidden">
+            <h2 className="font-display text-sm uppercase tracking-[.24em] text-gold">Filters</h2>
+            <button
+              type="button"
+              onClick={() => setFiltersOpen(current => !current)}
+              className="inline-flex items-center gap-2 rounded-full border border-[var(--line)] bg-night/80 px-4 py-2 text-sm text-[var(--fg)] transition hover:border-gold hover:text-gold"
+            >
+              <ChevronDown size={16} className={filtersOpen ? "rotate-180 transition" : "transition"} />
+              {filtersOpen ? "Hide filters" : "Show filters"}
+            </button>
+          </div>
+          <aside className={`${filtersOpen ? "block" : "hidden"} glass h-fit rounded-3xl p-5 md:block`}>
             <h2 className="flex items-center gap-2 font-display text-xs uppercase tracking-[.24em] text-gold">
               <SlidersHorizontal size={16} /> Filters
             </h2>
@@ -96,7 +108,7 @@ export function CollectionsPageClient({ categoryFromQuery, occasionFromQuery, pr
               ))}
             </div>
           </aside>
-          <section className="grid gap-5 sm:grid-cols-2 xl:grid-cols-3">
+          <section className="grid gap-5 grid-cols-2 xl:grid-cols-3">
             {filtered.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
