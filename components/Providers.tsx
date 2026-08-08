@@ -62,15 +62,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
       closeCart: () => setIsCartOpen(false),
       addItem: item => {
         setItems(current => {
-          const existing = current.find(entry => entry.id === item.id);
+          const existing = current.find(entry => entry.id === item.id && entry.size === item.size);
           if (existing) {
             return current.map(entry =>
-              entry.id === item.id ? { ...entry, quantity: entry.quantity + 1 } : entry
+              entry.id === item.id && entry.size === item.size
+                ? { ...entry, quantity: entry.quantity + 1 }
+                : entry
             );
           }
           return [...current, { ...item, quantity: 1 }];
         });
-        setToast(`${item.name} added to cart`);
+        setToast(`${item.name}${item.size ? ` (${item.size})` : ""} added to cart`);
         setIsCartOpen(true);
         if (closeCartTimeout.current) {
           window.clearTimeout(closeCartTimeout.current);

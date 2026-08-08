@@ -36,12 +36,15 @@ export function CartDrawer() {
             </div>
           )}
           {items.map(item => (
-            <div key={item.id} className="grid grid-cols-[76px_1fr] gap-4 border-b border-white/10 pb-4">
+            <div key={`${item.id}-${item.size || 'default'}`} className="grid grid-cols-[76px_1fr] gap-4 border-b border-white/10 pb-4">
               <img src={item.image} alt="" className="h-24 w-full object-cover" />
               <div>
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-medium">{item.name}</p>
+                    {item.size && (
+                      <p className="mt-0.5 text-xs text-gold font-semibold uppercase tracking-wider">Size: {item.size}</p>
+                    )}
                     <p className="mt-1 text-sm text-white/60">{formatPrice(item.price)}</p>
                   </div>
                   <button aria-label={`Remove ${item.name}`} onClick={() => removeItem(item.id)} className="text-white/55 hover:text-terracotta">

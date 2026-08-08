@@ -33,8 +33,8 @@ export default async function HomePage() {
       <section className="relative min-h-screen overflow-hidden bg-night">
         {/* Mobile hero image (herosa.jpeg) */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-fixed object-cover md:hidden"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat object-cover md:hidden"
+          style={{ backgroundImage: `url('/images/herosa.jpeg')` }}
         />
         {/* Desktop hero image (herosa.png) */}
         <div
