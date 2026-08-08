@@ -20,7 +20,7 @@ export async function createProduct(formData: FormData) {
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
   const category = formData.get("category") as string;
-  const occasion = formData.get("occasion") as string;
+  const occasion = (formData.get("occasion") as string | null) ?? "";
   const color = formData.get("color") as string;
   const fabric = formData.get("fabric") as string;
   const stock = parseInt(formData.get("stock") as string, 10);
@@ -64,7 +64,7 @@ export async function updateProduct(id: string, formData: FormData) {
   const description = formData.get("description") as string;
   const price = parseFloat(formData.get("price") as string);
   const category = formData.get("category") as string;
-  const occasion = formData.get("occasion") as string;
+  const occasion = (formData.get("occasion") as string | null) ?? "";
   const color = formData.get("color") as string;
   const fabric = formData.get("fabric") as string;
   const stock = parseInt(formData.get("stock") as string, 10);

@@ -22,6 +22,11 @@ export const orderSchema = z.object({
   paymentMethod: z.string().trim().optional()
 });
 
+export const orderTrackingSchema = z.object({
+  orderId: z.string().trim().min(1, "Order ID is required."),
+  email: emailSchema,
+});
+
 export const contactSchema = z.object({
   name: z.string().trim().min(2, "Name must be at least 2 characters."),
   email: emailSchema,

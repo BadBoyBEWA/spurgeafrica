@@ -3,10 +3,14 @@ import { authOptions } from "@/lib/auth";
 import Link from "next/link";
 import { ProductForm } from "../ProductForm";
 import { ArrowLeft } from "lucide-react";
+import { getCollections } from "@/lib/collection-queries";
 
 export default async function NewProductPage() {
   const session = await getServerSession(authOptions);
   if (!session) return null;
+
+  const collections = await getCollections();
+  const categories = collections.map((collection) => collection.title);
 
   return (
     <div className="space-y-6">
@@ -21,7 +25,7 @@ export default async function NewProductPage() {
         </Link>
       </div>
       <div className="max-w-3xl rounded-lg border border-white/10 bg-zinc-950/70 p-6 shadow-sm">
-        <ProductForm />
+        <ProductForm categories={categories} />
       </div>
     </div>
   );

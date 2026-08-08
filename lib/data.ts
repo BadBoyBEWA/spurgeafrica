@@ -28,12 +28,13 @@ export type Product = {
 export const navLinks = [
   ["Shop", "/collections"],
   ["Custom Tailoring", "/tailoring"],
+  ["Track Order", "/track-order"],
   // ["Lookbook", "/lookbook"],
   ["About", "/about"],
   ["Contact", "/contact"]
 ] as const;
 
-export const heroImage = "/images/herosa.png";
+export const heroImage = "/images/herosa.jpeg";
 
 export const categories = [
   {

@@ -18,24 +18,28 @@ export const dynamic = "force-dynamic";
 export default async function HomePage() {
   const products = await getProducts();
   const collections = await getCollections();
-  
-  // Start with static categories from data.ts, then add new collections from dashboard
-  const categoryItems = [
-    ...categories,
-    ...collections.map(col => ({
-      id: col.id,
-      title: col.title,
-      href: col.href,
-      image: col.image
-    }))
-  ];
-  
+
+  const categoryItems = collections.length > 0
+    ? collections.map(col => ({
+        id: col.id,
+        title: col.title,
+        href: col.href,
+        image: col.image,
+      }))
+    : categories;
+
   return (
     <main>
       <section className="relative min-h-screen overflow-hidden bg-night">
+        {/* Mobile hero image (herosa.jpeg) */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-fixed object-cover"
+          className="absolute inset-0 bg-cover bg-center bg-fixed object-cover md:hidden"
           style={{ backgroundImage: `url(${heroImage})` }}
+        />
+        {/* Desktop hero image (herosa.png) */}
+        <div
+          className="absolute inset-0 hidden bg-cover bg-center bg-fixed object-cover md:block"
+          style={{ backgroundImage: `url('/images/herosa.png')` }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black/75 via-night/70 to-[var(--bg)]" />
         <div className="relative mx-auto flex min-h-screen max-w-7xl items-center px-4 pb-16 pt-32 sm:px-6 lg:px-8">

@@ -77,7 +77,19 @@ function CheckoutSuccessInner() {
           {isChecking ? "Checking Payment" : isPaid ? "Payment Confirmed" : "Payment Not Confirmed"}
         </h1>
         <p className="mt-4 text-muted">{state.message}</p>
-        {state.orderId && <p className="mt-3 text-sm text-gold">Order number: {state.orderId}</p>}
+        {state.orderId && (
+          <>
+            <p className="mt-3 text-sm text-gold">Order number: {state.orderId}</p>
+            <div className="mt-4">
+              <Link
+                href="/track-order"
+                className="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold uppercase tracking-[.18em] text-night transition hover:bg-zinc-100"
+              >
+                Track order
+              </Link>
+            </div>
+          </>
+        )}
         <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
           <Link href="/collections" className="bg-gold px-6 py-3 font-display text-xs uppercase tracking-[.18em] text-night">
             Continue Shopping

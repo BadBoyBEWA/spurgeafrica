@@ -6,13 +6,14 @@ import { createProduct, updateProduct } from "./actions";
 
 type ProductFormProps = {
   initialData?: any;
+  categories: string[];
 };
 
 const inputClass =
   "mt-1 block w-full rounded-md border border-white/10 bg-white/[0.06] px-3 py-2.5 text-cream placeholder:text-zinc-600 focus:border-gold focus:outline-none focus:ring-2 focus:ring-gold/20 sm:text-sm";
 const labelClass = "block text-sm font-medium text-zinc-300";
 
-export function ProductForm({ initialData }: ProductFormProps) {
+export function ProductForm({ initialData, categories }: ProductFormProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -54,21 +55,19 @@ export function ProductForm({ initialData }: ProductFormProps) {
         </div>
         <div>
           <label className={labelClass}>Category</label>
-          <select name="category" defaultValue={initialData?.category || "Agbada"} className={inputClass}>
-            <option>Agbada</option>
-            <option>Senator</option>
-            <option>Kaftan</option>
-            <option>Casual</option>
-          </select>
-        </div>
-        <div>
-          <label className={labelClass}>Occasion</label>
-          <select name="occasion" defaultValue={initialData?.occasion || "Wedding"} className={inputClass}>
-            <option>Wedding</option>
-            <option>Corporate</option>
-            <option>Casual</option>
-            <option>Traditional</option>
-            <option>Luxury</option>
+          <select name="category" defaultValue={initialData?.category || categories[0] || "Agbada"} className={inputClass}>
+            {categories.length > 0 ? (
+              categories.map((category) => (
+                <option key={category}>{category}</option>
+              ))
+            ) : (
+              <>
+                <option>Agbada</option>
+                <option>Senator</option>
+                <option>Kaftan</option>
+                <option>Casual</option>
+              </>
+            )}
           </select>
         </div>
         <div>

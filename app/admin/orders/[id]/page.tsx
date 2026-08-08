@@ -4,6 +4,7 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { formatPrice } from "@/lib/data";
 import { ArrowLeft, CreditCard, MapPin, Package, User } from "lucide-react";
+import { OrderStatusUpdater } from "./OrderStatusUpdater";
 
 export default async function AdminOrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -67,6 +68,8 @@ export default async function AdminOrderDetailPage({ params }: { params: Promise
         </div>
 
         <div className="space-y-6">
+          <OrderStatusUpdater orderId={order.id} currentStatus={order.status} />
+
           <section className="rounded-lg border border-white/10 bg-zinc-950/70 p-6 shadow-sm">
             <div className="mb-4 flex items-center gap-3">
               <User className="h-5 w-5 text-gold" />

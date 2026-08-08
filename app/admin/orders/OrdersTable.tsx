@@ -2,35 +2,44 @@
 
 import { useState, useTransition } from "react";
 import Link from "next/link";
-import { ArrowUpRight, Pencil, Trash2, AlertTriangle, X, CheckSquare } from "lucide-react";
+import { AlertTriangle, CheckSquare, Eye, Trash2, X } from "lucide-react";
 import { formatPrice } from "@/lib/data";
-import { hardDeleteProduct, bulkDeleteProducts } from "./actions";
+import { deleteOrder } from "@/app/admin/actions";
 
-type Product = {
+type OrderItem = {
   id: string;
-  slug: string;
-  name: string;
-  image: string;
-  category: string;
+  productId: string;
+  productName: string | null;
+  quantity: number;
   price: number;
-  stock: number;
-  isActive: boolean;
+  product?: { name?: string } | null;
 };
 
-type Props = { products: Product[] };
+type Order = {
+  id: string;
+  createdAt: string;
+  customerName: string;
+  email: string;
+  status: string;
+  items: OrderItem[];
+};
 
-export function ProductsTable({ products }: Props) {
+type Props = {
+  orders: Order[];
+};
+
+export function OrdersTable({ orders }: Props) {
   const [selected, setSelected] = useState<Set<string>>(new Set());
   const [confirmId, setConfirmId] = useState<string | null>(null);
   const [confirmBulk, setConfirmBulk] = useState(false);
   const [bulkProgress, setBulkProgress] = useState<{ total: number; completed: number } | null>(null);
   const [isPending, startTransition] = useTransition();
 
-  const allChecked = products.length > 0 && selected.size === products.length;
-  const someChecked = selected.size > 0 && !allChecked;
+  const allChecked = orders.length > 0 && selected.size === orders.length;
+  const someChecked = selected.size > 0 && selected.size < orders.length;
 
   function toggleAll() {
-    setSelected(allChecked ? new Set() : new Set(products.map((p) => p.id)));
+    setSelected(allChecked ? new Set() : new Set(orders.map((order) => order.id)));
   }
 
   function toggleOne(id: string) {
@@ -50,8 +59,12 @@ export function ProductsTable({ products }: Props) {
     const id = confirmId;
     setConfirmId(null);
     startTransition(async () => {
-      await hardDeleteProduct(id);
-      setSelected((prev) => { const n = new Set(prev); n.delete(id); return n; });
+      await deleteOrder(id);
+      setSelected((prev) => {
+        const next = new Set(prev);
+        next.delete(id);
+        return next;
+      });
     });
   }
 
@@ -62,24 +75,23 @@ export function ProductsTable({ products }: Props) {
     setBulkProgress({ total: ids.length, completed: 0 });
     startTransition(async () => {
       for (const id of ids) {
-        await hardDeleteProduct(id);
+        await deleteOrder(id);
         setBulkProgress((prev) => prev && ({ total: prev.total, completed: prev.completed + 1 }));
       }
       setBulkProgress(null);
     });
   }
 
-  const singleDeleteProduct = products.find((p) => p.id === confirmId);
+  const singleDeleteOrder = orders.find((order) => order.id === confirmId);
 
   return (
     <>
-      {/* ── Bulk action bar ─────────────────────────────────────── */}
       {selected.size > 0 && (
         <div className="flex items-center justify-between rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3">
           <div className="flex items-center gap-3">
             <CheckSquare className="h-4 w-4 text-red-400" />
             <span className="text-sm font-medium text-cream">
-              {selected.size} product{selected.size !== 1 ? "s" : ""} selected
+              {selected.size} order{selected.size !== 1 ? "s" : ""} selected
             </span>
             <button
               onClick={() => setSelected(new Set())}
@@ -99,7 +111,6 @@ export function ProductsTable({ products }: Props) {
         </div>
       )}
 
-      {/* ── Table ────────────────────────────────────────────────── */}
       <div className="overflow-hidden rounded-lg border border-white/10 bg-zinc-950/70 shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-zinc-800">
@@ -111,83 +122,76 @@ export function ProductsTable({ products }: Props) {
                     checked={allChecked}
                     ref={(el) => { if (el) el.indeterminate = someChecked; }}
                     onChange={toggleAll}
-                    aria-label="Select all products"
+                    aria-label="Select all orders"
                     className="h-4 w-4 cursor-pointer rounded border-zinc-600 accent-gold"
                   />
                 </th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Product</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Category</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Price</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Stock</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Order ID</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Date</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Customer</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Total</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-zinc-500">Status</th>
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-zinc-500">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-zinc-800">
-              {products.map((product) => (
-                <tr
-                  key={product.id}
-                  className={`transition hover:bg-zinc-900/70 ${selected.has(product.id) ? "bg-zinc-900/50" : ""}`}
-                >
-                  <td className="px-4 py-4">
-                    <input
-                      type="checkbox"
-                      checked={selected.has(product.id)}
-                      onChange={() => toggleOne(product.id)}
-                      aria-label={`Select ${product.name}`}
-                      className="h-4 w-4 cursor-pointer rounded border-zinc-600 accent-gold"
-                    />
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4">
-                    <div className="flex items-center">
-                      <img className="h-11 w-11 rounded-md object-cover" src={product.image} alt="" />
-                      <div className="ml-4">
-                        <div className="flex items-center gap-2">
-                          <span className="text-sm font-medium text-cream">{product.name}</span>
-                          {!product.isActive && (
-                            <span className="rounded-full bg-red-500/15 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-red-400">
-                              Hidden
-                            </span>
-                          )}
-                        </div>
-                        <Link
-                          href={`/products/${product.slug}`}
-                          className="mt-1 inline-flex items-center text-xs text-zinc-500 hover:text-gold"
-                        >
-                          View storefront
-                          <ArrowUpRight className="ml-1 h-3 w-3" />
+              {orders.map((order) => {
+                const total = order.items.reduce((sum, item) => sum + item.price * item.quantity, 0);
+                return (
+                  <tr key={order.id} className={`transition hover:bg-zinc-900/70 ${selected.has(order.id) ? "bg-zinc-900/50" : ""}`}>
+                    <td className="px-4 py-4">
+                      <input
+                        type="checkbox"
+                        checked={selected.has(order.id)}
+                        onChange={() => toggleOne(order.id)}
+                        aria-label={`Select order ${order.id}`}
+                        className="h-4 w-4 cursor-pointer rounded border-zinc-600 accent-gold"
+                      />
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm font-medium text-cream">{order.id}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-zinc-400">{new Date(order.createdAt).toLocaleDateString()}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-zinc-300">{order.customerName}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm text-gold">{formatPrice(total)}</td>
+                    <td className="whitespace-nowrap px-6 py-4 text-sm">
+                      <span className={`inline-flex rounded-full px-2.5 py-1 text-xs font-semibold capitalize ${
+                        order.status === "pending"      ? "bg-yellow-400/10 text-yellow-300" :
+                        order.status === "confirmed"    ? "bg-cyan-400/10 text-cyan-300" :
+                        order.status === "processing"   ? "bg-purple-400/10 text-purple-300" :
+                        order.status === "in_warehouse" ? "bg-indigo-400/10 text-indigo-300" :
+                        order.status === "on_route"     ? "bg-orange-400/10 text-orange-300" :
+                        order.status === "delivered"    ? "bg-green-400/10 text-green-300" :
+                        order.status === "cancelled"    ? "bg-red-400/10 text-red-300" :
+                        "bg-zinc-800 text-zinc-300"
+                      }`}>
+                        {order.status === "in_warehouse" ? "In Warehouse" :
+                         order.status === "on_route"     ? "On Route" :
+                         order.status.charAt(0).toUpperCase() + order.status.slice(1)}
+                      </span>
+                    </td>
+                    <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
+                      <div className="inline-flex items-center gap-3">
+                        <Link href={`/admin/orders/${order.id}`} className="inline-flex items-center text-zinc-400 hover:text-gold">
+                          <Eye className="mr-1 h-4 w-4" /> View
                         </Link>
+                        <button
+                          onClick={() => handleDelete(order.id)}
+                          disabled={isPending}
+                          className="inline-flex items-center text-zinc-500 transition hover:text-red-400 disabled:opacity-50"
+                          aria-label={`Delete order ${order.id}`}
+                        >
+                          <Trash2 className="mr-1 h-4 w-4" />
+                          Delete
+                        </button>
                       </div>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-zinc-400">{product.category}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-gold">{formatPrice(product.price)}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-sm text-zinc-400">{product.stock}</td>
-                  <td className="whitespace-nowrap px-6 py-4 text-right text-sm font-medium">
-                    <div className="inline-flex items-center gap-3">
-                      <Link
-                        href={`/admin/products/${product.id}/edit`}
-                        className="inline-flex items-center text-zinc-400 hover:text-gold"
-                      >
-                        <Pencil className="mr-1 h-4 w-4" />
-                        Edit
-                      </Link>
-                      <button
-                        onClick={() => handleDelete(product.id)}
-                        disabled={isPending}
-                        className="inline-flex items-center text-zinc-500 transition hover:text-red-400 disabled:opacity-50"
-                        aria-label={`Delete ${product.name}`}
-                      >
-                        <Trash2 className="mr-1 h-4 w-4" />
-                        Delete
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-              {products.length === 0 && (
+                    </td>
+                  </tr>
+                );
+              })}
+
+              {orders.length === 0 && (
                 <tr>
-                  <td colSpan={6} className="px-6 py-12 text-center text-sm text-zinc-500">
-                    No products found.
+                  <td colSpan={7} className="px-6 py-12 text-center text-sm text-zinc-500">
+                    No orders found.
                   </td>
                 </tr>
               )}
@@ -196,7 +200,6 @@ export function ProductsTable({ products }: Props) {
         </div>
       </div>
 
-      {/* ── Single delete confirmation modal ──────────────────────── */}
       {confirmId && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-xl border border-white/10 bg-zinc-900 p-6 shadow-2xl">
@@ -205,13 +208,12 @@ export function ProductsTable({ products }: Props) {
                 <AlertTriangle className="h-5 w-5 text-red-400" />
               </div>
               <div className="flex-1">
-                <h3 className="font-display text-lg font-semibold text-cream">Delete product?</h3>
+                <h3 className="font-display text-lg font-semibold text-cream">Delete order?</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  <span className="font-medium text-cream">{singleDeleteProduct?.name}</span> will be permanently removed from your catalog. This cannot be undone.
+                  <span className="font-medium text-cream">{singleDeleteOrder?.id}</span> will be removed permanently from the dashboard.
                 </p>
-                {/* Warn if product may have orders */}
                 <p className="mt-2 text-xs text-amber-400/80">
-                  Products linked to past orders are soft-deleted (hidden from store) to preserve order history.
+                  This action is recorded in audit logs.
                 </p>
               </div>
               <button onClick={() => setConfirmId(null)} className="text-zinc-500 hover:text-cream">
@@ -237,7 +239,6 @@ export function ProductsTable({ products }: Props) {
         </div>
       )}
 
-      {/* ── Bulk delete confirmation modal ────────────────────────── */}
       {confirmBulk && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4">
           <div className="w-full max-w-md rounded-xl border border-white/10 bg-zinc-900 p-6 shadow-2xl">
@@ -246,12 +247,9 @@ export function ProductsTable({ products }: Props) {
                 <AlertTriangle className="h-5 w-5 text-red-400" />
               </div>
               <div className="flex-1">
-                <h3 className="font-display text-lg font-semibold text-cream">Delete {selected.size} products?</h3>
+                <h3 className="font-display text-lg font-semibold text-cream">Delete {selected.size} orders?</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  All selected products will be permanently removed. This action cannot be undone.
-                </p>
-                <p className="mt-2 text-xs text-amber-400/80">
-                  Products linked to past orders will be soft-deleted to preserve order history.
+                  All selected orders will be deleted and recorded in audit logs.
                 </p>
               </div>
               <button onClick={() => setConfirmBulk(false)} className="text-zinc-500 hover:text-cream">
@@ -270,7 +268,7 @@ export function ProductsTable({ products }: Props) {
                 disabled={isPending}
                 className="rounded-md bg-red-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-red-500 disabled:opacity-60"
               >
-                {isPending ? "Deleting…" : `Delete ${selected.size} products`}
+                {isPending ? "Deleting…" : "Yes, delete"}
               </button>
             </div>
           </div>
@@ -285,9 +283,9 @@ export function ProductsTable({ products }: Props) {
                 <CheckSquare className="h-5 w-5 text-gold" />
               </div>
               <div className="flex-1">
-                <h3 className="font-display text-lg font-semibold text-cream">Deleting products…</h3>
+                <h3 className="font-display text-lg font-semibold text-cream">Deleting orders…</h3>
                 <p className="mt-1 text-sm text-zinc-400">
-                  {bulkProgress.completed} of {bulkProgress.total} products deleted.
+                  {bulkProgress.completed} of {bulkProgress.total} orders deleted.
                 </p>
               </div>
             </div>

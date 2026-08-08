@@ -42,14 +42,18 @@ export async function logAuditAction(params: {
 
 export async function updateOrderStatus(orderId: string, status: string) {
   const session = await getAuthSession();
-  const oldOrder = await prisma.order.findUnique({ where: { id: orderId } });
-  
+
+  const oldOrder = await prisma.order.findUnique({
+    where: { id: orderId },
+    select: { status: true },
+  });
+
   await prisma.order.update({
     where: { id: orderId },
     data: { status },
   });
 
-  await logAuditAction({
+  logAuditAction({
     adminEmail: session.user?.email ?? undefined,
     action: "ORDER_STATUS_UPDATE",
     entityType: "Order",
@@ -59,6 +63,26 @@ export async function updateOrderStatus(orderId: string, status: string) {
 
   revalidatePath(`/admin/orders`);
   revalidatePath(`/admin/orders/${orderId}`);
+  revalidatePath(`/admin/dashboard`);
+}
+
+export async function deleteOrder(orderId: string) {
+  const session = await getAuthSession();
+  const order = await prisma.order.findUnique({ where: { id: orderId } });
+
+  await prisma.order.delete({
+    where: { id: orderId },
+  });
+
+  await logAuditAction({
+    adminEmail: session.user?.email ?? undefined,
+    action: "ORDER_DELETE",
+    entityType: "Order",
+    entityId: orderId,
+    details: `Deleted order '${order?.id || orderId}' for ${order?.customerName || "unknown customer"}`,
+  });
+
+  revalidatePath(`/admin/orders`);
   revalidatePath(`/admin/dashboard`);
 }
 

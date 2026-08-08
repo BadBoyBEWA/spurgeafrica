@@ -4,17 +4,23 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ProductForm } from "../../ProductForm";
 import { ArrowLeft } from "lucide-react";
+import { getCollections } from "@/lib/collection-queries";
 
 export default async function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const session = await getServerSession(authOptions);
   if (!session) return null;
 
-  const product = await prisma.product.findUnique({
-    where: { id },
-  });
+  const [collections, product] = await Promise.all([
+    getCollections(),
+    prisma.product.findUnique({
+      where: { id },
+    }),
+  ]);
 
   if (!product) return <div className="text-zinc-400">Product not found</div>;
+
+  const categories = [...new Set([...collections.map((collection) => collection.title), product.category])];
 
   return (
     <div className="space-y-6">
@@ -30,7 +36,7 @@ export default async function EditProductPage({ params }: { params: Promise<{ id
         </Link>
       </div>
       <div className="max-w-3xl rounded-lg border border-white/10 bg-zinc-950/70 p-6 shadow-sm">
-        <ProductForm initialData={product} />
+        <ProductForm initialData={product} categories={categories} />
       </div>
     </div>
   );
